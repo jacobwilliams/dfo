@@ -87,7 +87,7 @@ C      DOUBLE PRECISION RW( LRW )
 C
 C     Parameters for IPOPT
 C
-      INCLUDE 'dfo_model_inc.f'
+      INCLUDE 'dfo_model_inc.inc'
 C
 C  PRINTOUT PARAMETERS
 C
@@ -854,7 +854,7 @@ C                              Include files
 C
 C*******************************************************************************
 C
-      INCLUDE 'dfo_model_inc.f'
+      INCLUDE 'dfo_model_inc.inc'
 C
 C
 C-------------------------------------------------------------------------------

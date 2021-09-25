@@ -149,7 +149,7 @@ C
 C  COMMON VARIABLES
 C
 C
-      INCLUDE 'dfo_model_inc.f'
+      INCLUDE 'dfo_model_inc.inc'
 C
 C  PROCESS CONTROL PARAMETERS
 C

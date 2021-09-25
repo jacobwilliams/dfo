@@ -94,7 +94,7 @@ C
 C
 C  COMMON VARIABLES
 C
-      INCLUDE 'dfo_model_inc.f'
+      INCLUDE 'dfo_model_inc.inc'
 C
 C  LENGTH OF ARRAYS
 C
@@ -1945,7 +1945,7 @@ C
 C
 C  COMMON VARIABLES
 C
-      INCLUDE 'dfo_model_inc.f'
+      INCLUDE 'dfo_model_inc.inc'
 
       INTEGER          IOUT  , IPRINT
       DOUBLE PRECISION MCHEPS, CNSTOL

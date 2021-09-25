@@ -11,7 +11,7 @@
       DOUBLE PRECISION  HALF
 
       PARAMETER        (HALF=0.5D0)
-      INCLUDE 'dfo_model_inc.f'
+      INCLUDE 'dfo_model_inc.inc'
 
       NEASY=NLIN+NNLN
 C

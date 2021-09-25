@@ -95,7 +95,7 @@ C
 C
 C  MODEL PARAMETERS
 C
-      INCLUDE 'dfo_model_inc.f'
+      INCLUDE 'dfo_model_inc.inc'
 
 C
 C  PRINTOUT PARAMETERS
