@@ -1,36 +1,36 @@
-      INTEGER NVARMX, NCONMX, NLINMX, NNLNMX, NFUNMX
-      PARAMETER (NVARMX=50, NCONMX=50, NNLNMX=50, NLINMX=50, 
-     +           NFUNMX=10000)
+integer nvarmx, nconmx, nlinmx, nnlnmx, nfunmx
+parameter (nvarmx=50, nconmx=50, nnlnmx=50, nlinmx=50, &
+           nfunmx=10000)
 
-C
-C  CONSTRAINTS MODEL COEFFICIENTS
-C
-      DOUBLE PRECISION CCON, LCON, QCON
-    
-      COMMON /MDLCON/  CCON(NCONMX), LCON(NCONMX*NVARMX),
-     .                 QCON(NCONMX*NVARMX*NVARMX)
-      SAVE /MDLCON/
+!
+!  CONSTRAINTS MODEL COEFFICIENTS
+!
+double precision ccon, lcon, qcon
 
-      DOUBLE PRECISION GMOD, HMOD, AMAT
- 
-      COMMON / MDLPAR / GMOD(NVARMX), HMOD(NVARMX,NVARMX), 
-     .                  AMAT(NLINMX, NVARMX)
-      SAVE / MDLPAR /
-  
-      INTEGER          USEIPOPT, NCON, NNLN, NLIN 
-      
-      COMMON / MDLDIM / USEIPOPT, NCON, NNLN, NLIN 
-      SAVE / MDLDIM /
-C
-C  PARAMETERS NEED TO COMPUTE A MERIT FUNCTION AS OBJECTIVE FOR NPSOL
-C
+common /mdlcon/  ccon(nconmx), lcon(nconmx*nvarmx), &
+                 qcon(nconmx*nvarmx*nvarmx)
+save /mdlcon/
 
-      DOUBLE PRECISION CONL, CONU, PENPAR
- 
-      LOGICAL          USEMERIT
+double precision gmod, hmod, amat
 
-      COMMON / MERIT / CONL(NCONMX), CONU(NCONMX), PENPAR, USEMERIT
-      SAVE / MERIT /
+common / mdlpar / gmod(nvarmx), hmod(nvarmx,nvarmx), &
+                  amat(nlinmx, nvarmx)
+save / mdlpar /
+
+integer          useipopt, ncon, nnln, nlin 
+
+common / mdldim / useipopt, ncon, nnln, nlin 
+save / mdldim /
+!
+!  PARAMETERS NEED TO COMPUTE A MERIT FUNCTION AS OBJECTIVE FOR NPSOL
+!
+
+double precision conl, conu, penpar
+
+logical          usemerit
+
+common / merit / conl(nconmx), conu(nconmx), penpar, usemerit
+save / merit /
 
 
 
