@@ -30,7 +30,7 @@ subroutine ranlux(rvec,lenv)
 !!!!      CALL RLUXGO(LUX,INT,K1,K2) initializes the generator from  ++
 !!!!               one 32-bit integer INT and sets Luxury Level LUX  ++
 !!!!               which is integer between zero and MAXLEV, or if   ++
-!!!!               LUX .GT. 24, it sets p=LUX directly.  K1 and K2   ++
+!!!!               LUX > 24, it sets p=LUX directly.  K1 and K2   ++
 !!!!               should be set to zero unless restarting at a break++
 !!!!               point given by output of RLUXAT (see RLUXAT).     ++
 !!!!      CALL RLUXAT(LUX,INT,K1,K2) gets the values of four integers++
@@ -86,7 +86,7 @@ if (notyet) then
       twom24 = twom24 * 0.5
    k = jseed/53668
    jseed = 40014*(jseed-k*53668) -k*12211
-   if (jseed .lt. 0)  jseed = jseed+icons
+   if (jseed < 0)  jseed = jseed+icons
    iseeds(i) = mod(jseed,itwo24)
 25    continue
    twom12 = twom24 * 4096.
@@ -98,7 +98,7 @@ if (notyet) then
    i24 = 24
    j24 = 10
    carry = 0.
-   if (seeds(24) .eq. 0.) carry = twom24
+   if (seeds(24) == 0.) carry = twom24
 endif
 !
 !          The Generator proper: "Subtract-with-borrow",
@@ -107,7 +107,7 @@ endif
 !
 do 100 ivec= 1, lenv
 uni = seeds(j24) - seeds(i24) - carry
-if (uni .lt. 0.)  then
+if (uni < 0.)  then
    uni = uni + 1.0
    carry = twom24
 else
@@ -118,19 +118,19 @@ i24 = next(i24)
 j24 = next(j24)
 rvec(ivec) = uni
 !  small numbers (with less than 12 "significant" bits) are "padded".
-if (uni .lt. twom12)  then
+if (uni < twom12)  then
    rvec(ivec) = rvec(ivec) + twom24*seeds(j24)
 !        and zero is forbidden in case someone takes a logarithm
-   if (rvec(ivec) .eq. 0.)  rvec(ivec) = twom24*twom24
+   if (rvec(ivec) == 0.)  rvec(ivec) = twom24*twom24
 endif
 !        Skipping to luxury.  As proposed by Martin Luscher.
 in24 = in24 + 1
-if (in24 .eq. 24)  then
+if (in24 == 24)  then
    in24 = 0
    kount = kount + nskip
    do 90 isk= 1, nskip
    uni = seeds(j24) - seeds(i24) - carry
-   if (uni .lt. 0.)  then
+   if (uni < 0.)  then
       uni = uni + 1.0
       carry = twom24
    else
@@ -143,7 +143,7 @@ if (in24 .eq. 24)  then
 endif
 100 continue
 kount = kount + lenv
-if (kount .ge. igiga)  then
+if (kount >= igiga)  then
    mkount = mkount + 1
    kount = kount - igiga
 endif
@@ -170,7 +170,7 @@ do 200 i= 1, 24
 seeds(i) = real(isdext(i))*twom24
 200 continue
 carry = 0.
-if (isdext(25) .lt. 0)  carry = twom24
+if (isdext(25) < 0)  carry = twom24
 isd = iabs(isdext(25))
 i24 = mod(isd,100)
 isd = isd/100
@@ -179,11 +179,11 @@ isd = isd/100
 in24 = mod(isd,100)
 isd = isd/100
 luxlev = isd
-  if (luxlev .le. maxlev) then
+  if (luxlev <= maxlev) then
     nskip = ndskip(luxlev)
 !         WRITE (6,'(A,I2)') ' RANLUX LUXURY LEVEL SET BY RLUXIN TO: ',
 !    +                         LUXLEV
-  else  if (luxlev .ge. 24) then
+  else  if (luxlev >= 24) then
     nskip = luxlev - 24
 !         WRITE (6,'(A,I5)') ' RANLUX P-VALUE SET BY RLUXIN TO:',LUXLEV
   else
@@ -200,7 +200,7 @@ do 300 i= 1, 24
    isdext(i) = int(seeds(i)*twop12*twop12)
 300 continue
 isdext(25) = i24 + 100*j24 + 10000*in24 + 1000000*luxlev
-if (carry .gt. 0.)  isdext(25) = -isdext(25)
+if (carry > 0.)  isdext(25) = -isdext(25)
 return
 !
 !                    Entry to output the "convenient" restart point
@@ -213,20 +213,20 @@ return
 !
 !                    Entry to initialize from one or three integers
 entry rluxgo(lux,ins,k1,k2)
-   if (lux .lt. 0) then
+   if (lux < 0) then
       luxlev = lxdflt
-   else if (lux .le. maxlev) then
+   else if (lux <= maxlev) then
       luxlev = lux
-   else if (lux .lt. 24 .or. lux .gt. 2000) then
+   else if (lux < 24 .or. lux > 2000) then
       luxlev = maxlev
       write (6,'(A,I7)') ' RANLUX ILLEGAL LUXURY RLUXGO: ',lux
    else
       luxlev = lux
       do 310 ilx= 0, maxlev
-        if (lux .eq. ndskip(ilx)+24)  luxlev = ilx
+        if (lux == ndskip(ilx)+24)  luxlev = ilx
 310       continue
    endif
-if (luxlev .le. maxlev)  then
+if (luxlev <= maxlev)  then
    nskip = ndskip(luxlev)
 !        WRITE(6,'(A,I2,A,I4)') ' RANLUX LUXURY LEVEL SET BY RLUXGO :',
 !    +        LUXLEV,'     P=', NSKIP+24
@@ -235,9 +235,9 @@ else
 !         WRITE (6,'(A,I5)') ' RANLUX P-VALUE SET BY RLUXGO TO:',LUXLEV
 endif
 in24 = 0
-if (ins .lt. 0)  write (6,'(A)') &
+if (ins < 0)  write (6,'(A)') &
    ' Illegal initialization by RLUXGO, negative input seed'
-if (ins .gt. 0)  then
+if (ins > 0)  then
   jseed = ins
 !       WRITE(6,'(A,3I12)') ' RANLUX INITIALIZED BY RLUXGO FROM SEEDS',
 !    +      JSEED, K1,K2
@@ -252,7 +252,7 @@ twom24 = 1.
      twom24 = twom24 * 0.5
    k = jseed/53668
    jseed = 40014*(jseed-k*53668) -k*12211
-   if (jseed .lt. 0)  jseed = jseed+icons
+   if (jseed < 0)  jseed = jseed+icons
    iseeds(i) = mod(jseed,itwo24)
 325    continue
 twom12 = twom24 * 4096.
@@ -264,19 +264,19 @@ next(1) = 24
 i24 = 24
 j24 = 10
 carry = 0.
-if (seeds(24) .eq. 0.) carry = twom24
+if (seeds(24) == 0.) carry = twom24
 !        If restarting at a break point, skip K1 + IGIGA*K2
 !        Note that this is the number of numbers delivered to
-!        the user PLUS the number skipped (if luxury .GT. 0).
+!        the user PLUS the number skipped (if luxury > 0).
 kount = k1
 mkount = k2
-if (k1+k2 .ne. 0)  then
+if (k1+k2 /= 0)  then
   do 500 iouter= 1, k2+1
     inner = igiga
-    if (iouter .eq. k2+1)  inner = k1
+    if (iouter == k2+1)  inner = k1
     do 450 isk= 1, inner
       uni = seeds(j24) - seeds(i24) - carry
-      if (uni .lt. 0.)  then
+      if (uni < 0.)  then
          uni = uni + 1.0
          carry = twom24
       else
@@ -289,13 +289,13 @@ if (k1+k2 .ne. 0)  then
 500   continue
 !         Get the right value of IN24 by direct calculation
   in24 = mod(kount, nskip+24)
-  if (mkount .gt. 0)  then
+  if (mkount > 0)  then
      izip = mod(igiga, nskip+24)
      izip2 = mkount*izip + in24
      in24 = mod(izip2, nskip+24)
   endif
 !       Now IN24 had better be between zero and 23 inclusive
-  if (in24 .gt. 23) then
+  if (in24 > 23) then
      write (6,'(A/A,3I11,A,I5)') &
     '  Error in RESTARTING with RLUXGO:','  The values', ins, &
      k1, k2, ' cannot occur at luxury level', luxlev

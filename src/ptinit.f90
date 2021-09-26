@@ -181,10 +181,10 @@ val = zero
 !
 
 do 10 i=1,n
-  if (points(i).lt.lb(i)) then
+  if (points(i)<lb(i)) then
     points(i) = lb(i)
     bdvltd    = .true.
-  elseif (points(i).gt.ub(i)) then
+  elseif (points(i)>ub(i)) then
     points(i) = ub(i)
     bdvltd    = .true.
   endif
@@ -195,7 +195,7 @@ do 10 i=1,n
 !  IF PROJECTED, PRINT WARNING MESSAGE 
 !
 if (bdvltd) then
-  if ( iprint .ge. 0 ) write(iout, 1000)
+  if ( iprint >= 0 ) write(iout, 1000)
   call dcopy( n, points, 1, x, 1 ) 
 endif
 
@@ -205,7 +205,7 @@ endif
 
 do 20 i=1, nclin
   val=ddot(n, a(i), lda, points, 1)
-  if (val .gt. ub(n+i) .or. val .lt. lb(n+i)) infeas=.true.
+  if (val > ub(n+i) .or. val < lb(n+i)) infeas=.true.
 20 continue
 
 
@@ -226,7 +226,7 @@ do 20 i=1, nclin
 
 
 del=delta
-if ( ncnln .gt. 0 .or. infeas) then
+if ( ncnln > 0 .or. infeas) then
   do 40 i = 1, n
     gmod(i)   = -two*x( i )
     hmod(i,i) = two
@@ -251,15 +251,15 @@ if ( ncnln .gt. 0 .or. infeas) then
 
 
 
-  if ( inform .eq. 1 ) then
-    if ( iprint .gt. 0 ) write(iout,2000)
+  if ( inform == 1 ) then
+    if ( iprint > 0 ) write(iout,2000)
     return
-  elseif (inform .eq. 2) then
+  elseif (inform == 2) then
 !
 !  IF FEASIBLE SOLUTION WAS NOT FOUND, TRY TO INCREASE 
 !  TRUST REGION RADIUS 
 !
-    if (del .lt. delmax) then
+    if (del < delmax) then
       del=del*2
       goto 50
     else
@@ -267,7 +267,7 @@ if ( ncnln .gt. 0 .or. infeas) then
 !  IF THE TRUST REGION RADIUS IS AT IT'S MAXIMUM VALUE
 !  THEN ASSUME THE PROBLEM IS INFEASIBLE AND QUIT
 !
-      if( iprint.gt.0 )   write(iout,2010)
+      if( iprint>0 )   write(iout,2010)
       return
     endif
   endif
@@ -280,12 +280,12 @@ if ( ncnln .gt. 0 .or. infeas) then
   do 60 i = 1, n 
     val = val + abs(points(i)-x(i))
 60   continue
-  if ( iprint .ge. 0 ) then
-    if (val .gt. 100*n*mcheps) write(iout, 1010)
+  if ( iprint >= 0 ) then
+    if (val > 100*n*mcheps) write(iout, 1010)
   endif
 endif
 
-if (val .gt. 100*n*mcheps .or. bdvltd) then
+if (val > 100*n*mcheps .or. bdvltd) then
 
 !
 !  COMPUTE FUNCTION VALUE FOR THE FIRST POINT IF IT
@@ -293,15 +293,15 @@ if (val .gt. 100*n*mcheps .or. bdvltd) then
 !  FAILS, THEN QUIT THE PROGRAM
 !
   nf = nf + 1
-  if ( scale .ne. 0 ) call unscl( n, points, scal )
+  if ( scale /= 0 ) call unscl( n, points, scal )
   call fun( n, m, points, obfval, conval, iferr )
-  if ( scale .ne. 0 ) call scl( n, points, scal )
+  if ( scale /= 0 ) call scl( n, points, scal )
   if ( iferr ) then
-    if( iprint.gt.0 ) write(iout,2020)
+    if( iprint>0 ) write(iout,2020)
     inform = -1
     return
   endif
-  if ( nf .ge. maxnf ) then
+  if ( nf >= maxnf ) then
     inform = -2
     np0=1
     return
@@ -345,9 +345,9 @@ do 120 ix=2, nx
 !
 
   do 70 i=1,n
-    if ( points(inp+i-1).lt.lb(i)-cnstol .or. &
-         points(inp+i-1).gt.ub(i)+cnstol ) then 
-      if ( iprint .ge. 0 ) write(iout, 1020) ix
+    if ( points(inp+i-1)<lb(i)-cnstol .or. &
+         points(inp+i-1)>ub(i)+cnstol ) then 
+      if ( iprint >= 0 ) write(iout, 1020) ix
       go to 120
     endif
 70   continue
@@ -361,9 +361,9 @@ do 120 ix=2, nx
 
   do 80 i=1, nclin
     val=ddot(n, a(i), lda, points(inp), 1)
-    if ( val .gt. ub(n+i)+cnstol .or. &
-         val .lt. lb(n+i)-cnstol ) then
-      if ( iprint .ge. 0 ) write(iout, 1030) ix
+    if ( val > ub(n+i)+cnstol .or. &
+         val < lb(n+i)-cnstol ) then
+      if ( iprint >= 0 ) write(iout, 1030) ix
       go to 120
     endif
 80  continue
@@ -377,7 +377,7 @@ do 120 ix=2, nx
 !
 
   val = zero
-  if ( ncnln .gt. 0 ) then
+  if ( ncnln > 0 ) then
     do 100 i = 1, n
       gmod(i)   = -two*x( iix + i - 1 )
       hmod(i,i) = two
@@ -402,15 +402,15 @@ do 120 ix=2, nx
 
 
 
-    if ( inform .eq. 1 ) then
-      if ( iprint .gt. 0 ) write(iout,2000)
+    if ( inform == 1 ) then
+      if ( iprint > 0 ) write(iout,2000)
       return
-    elseif (inform .eq. 2) then
+    elseif (inform == 2) then
 !
 !  IF NO FEASIBLE SOLUTION WAS FOUND THEN SKIP THIS POINTS AND
 !  MOVE TO THE NEXT ONE
 !
-      if ( iprint .gt. 0 ) write( iout, 1040 ) ix
+      if ( iprint > 0 ) write( iout, 1040 ) ix
       go to 120 
     endif
  
@@ -422,8 +422,8 @@ do 120 ix=2, nx
     do 110 i = 1, n 
       val = val + abs(points(inp+i-1)-x(iix+i-1))
 110     continue
-    if (val .gt. 100*n*mcheps) then
-      if ( iprint .gt. 0 ) write(iout, 1040) ix
+    if (val > 100*n*mcheps) then
+      if ( iprint > 0 ) write(iout, 1040) ix
       go to 120
     endif
   endif
@@ -433,7 +433,7 @@ do 120 ix=2, nx
 !
   np           = np  + 1
   inp          = inp + n
-  if ( np .ne. ix ) then
+  if ( np /= ix ) then
     obfval( np ) = obfval( ix )
     call dcopy( m, conval((ix-1)*m+1), 1, conval((np-1)*m+1), 1 )
   endif
@@ -455,8 +455,8 @@ np0 = np
 !  WRITE  THE POINT IN ARRAY 'POINTS'
 !
 
-if ( np0 .eq. 1 ) then
-  if ( iprint .ge. 2 ) write( iout, 8000 ) 
+if ( np0 == 1 ) then
+  if ( iprint >= 2 ) write( iout, 8000 ) 
   call dcopy( n, points, 1, x, 1 )
 !
 !  GENERATE N RANDOM NUMBERS BETWEEN 0 AND 1 AND RECORD THEM TO
@@ -467,10 +467,10 @@ if ( np0 .eq. 1 ) then
   do 130 j = 1, n
     distb=zero
     distb=min(delta, ub(j)-x(j))
-    if (distb.gt.mcheps) then
+    if (distb>mcheps) then
       points( n + j ) = distb * points(n+j) + x( j )
     endif 
-    if (distb.le.mcheps) then
+    if (distb<=mcheps) then
       distb=min(delta, x(j)-lb(j))
       points( n + j ) = -distb * points(n+j) + x( j ) 
     endif
@@ -482,14 +482,14 @@ if ( np0 .eq. 1 ) then
   infeas = .false.
   do 140 i=1, nclin
     val=ddot(n, a(i), lda, points(n+1), 1)
-    if (val .gt. ub(n+i) .or. val .lt. lb(n+i)) infeas = .true.
+    if (val > ub(n+i) .or. val < lb(n+i)) infeas = .true.
 140   continue
   val = zero
 !  -------------------------------------------------------
 !  FIND THE SECOND POINT FOR INTERPOLATION
 !  -------------------------------------------------------
 
-  if ( ncnln .gt. 0 .or. infeas) then          
+  if ( ncnln > 0 .or. infeas) then          
     do 160 i = 1, n
       gmod(i)   = -two*points(n+i)
       hmod(i,i) =  two
@@ -504,11 +504,11 @@ if ( np0 .eq. 1 ) then
                  a   , lda  , nclin , ncnln, wrk, lwrk, &
                  iwrk, liwrk, inform, 1) 
 
-    if (inform .eq. 1) then
-      if( iprint.gt.0 )   write(iout,2000)
+    if (inform == 1) then
+      if( iprint>0 )   write(iout,2000)
       return
-    elseif (inform .eq. 2) then
-      if( iprint.gt.0 )   write(iout,2010)
+    elseif (inform == 2) then
+      if( iprint>0 )   write(iout,2010)
       return
     endif
 
@@ -522,7 +522,7 @@ if ( np0 .eq. 1 ) then
       val = val + abs(x(i)-points(i))
 170     continue
 
-    if (val .lt. 10*n*pivthr) then
+    if (val < 10*n*pivthr) then
       do 190 i = 1, n
         gmod(i)   =  two*points(n+i)
         hmod(i,i) = -two
@@ -537,11 +537,11 @@ if ( np0 .eq. 1 ) then
                    a   , lda  , nclin , ncnln, wrk, lwrk, &
                    iwrk, liwrk, inform, 1 ) 
 
-      if ( inform .eq. 1 ) then
-        if( iprint.gt.3 )   write(iout,2000)
+      if ( inform == 1 ) then
+        if( iprint>3 )   write(iout,2000)
         return
-      elseif ( inform .eq. 2 ) then
-        if( iprint.gt.3 )   write(iout,2010)
+      elseif ( inform == 2 ) then
+        if( iprint>3 )   write(iout,2010)
         return
       endif 
     endif
@@ -569,12 +569,12 @@ if ( np0 .eq. 1 ) then
 !
 
 
-200   if ( scale .ne. 0 ) call unscl( n, points( n+1 ), scal )
+200   if ( scale /= 0 ) call unscl( n, points( n+1 ), scal )
   call fun( n, m, points( n+1 ),  obfval( 2 ), conval( m+1 ), &
             iferr )
-  if ( scale .ne. 0 ) call scl( n, points( n+1 ), scal )
+  if ( scale /= 0 ) call scl( n, points( n+1 ), scal )
   nf = nf + 1
-  if ( nf .ge. maxnf ) then
+  if ( nf >= maxnf ) then
     inform = -2
     np0=2
     return
@@ -587,20 +587,20 @@ if ( np0 .eq. 1 ) then
 !  IF THE SECOND POINT GETS TOO CLOSE TO FIRST POINT, QUIT
 !
     call getdis( n, 2, 2, points, 1, dist, wrk, lwrk ) 
-    if ( dist(2) .lt. pivthr ) then  
+    if ( dist(2) < pivthr ) then  
       inform = -1
       return 
     endif
 !
 !  IF THE SECOND POINTS BECOMES NON-FEASIBLE, QUIT
 !
-    if ( ncnln.gt. 0 ) then 
+    if ( ncnln> 0 ) then 
 !            CALL FUNCON(1  , NCNLN , N  , NCNLN , IWRK,
 !     *                  POINTS(N+1), WRK, WRK(NCNLN+1), 1  )
        call easycon(n, points(n+1), ncnln, wrk)
       do 220 j=1, ncnln 
-        if ( wrk(j) .lt. lb(n+nclin+j) - cnstol .or. &
-             wrk(j) .gt. ub(n+nclin+j) + cnstol     ) then
+        if ( wrk(j) < lb(n+nclin+j) - cnstol .or. &
+             wrk(j) > ub(n+nclin+j) + cnstol     ) then
           inform = -1
           return 
         endif
@@ -622,10 +622,10 @@ endif
 !
 bdvltd = .false.
 do 250 i = 1, np0
-  if ( dist(i) .gt. layer*delta ) bdvltd = .true.
+  if ( dist(i) > layer*delta ) bdvltd = .true.
 250 continue
 if ( bdvltd ) then
-  if ( iprint .ge. 0 ) write(iout,1050)
+  if ( iprint >= 0 ) write(iout,1050)
 endif
 
 inform = 0
@@ -710,7 +710,7 @@ base = 1
 do 10 i=1, nq
   call fmerit(m, values(i), obfval(i), conval((i-1)*m+1), cu, cl, &
               penpar, method ) 
-  if ( values(i) .lt. values(base) + 1.0d2*mcheps ) base=i
+  if ( values(i) < values(base) + 1.0d2*mcheps ) base=i
 10 continue
 
 

@@ -83,7 +83,7 @@ integer          np1, dd, ndd, nindm1, ndmnp1, &
    kappa = kappa + lafla(j+1)*poly(2 + np1*(j-1))
 10  continue
 
- if (nind.gt.np1) then
+ if (nind>np1) then
 !
 !  UPDATE USING THE FINITE DIFF. CORRESPONDING TO QUADRATIC BLOCK
 !
@@ -99,7 +99,7 @@ integer          np1, dd, ndd, nindm1, ndmnp1, &
 !
 !  COMPUTE DEGREE ONE TERMS
 !
-   if (nind.gt.1) then 
+   if (nind>1) then 
 
 !
 !  UPDATE USING LINEAR BLOCK
@@ -110,7 +110,7 @@ integer          np1, dd, ndd, nindm1, ndmnp1, &
 50      continue
    endif
 
-   if (nind .gt.np1) then
+   if (nind >np1) then
 !
 !  UPDATE USING QUADRATIC BLOCK
 !
@@ -129,7 +129,7 @@ integer          np1, dd, ndd, nindm1, ndmnp1, &
 !  COMPUTE QUADRATIC TERMS USING QUADRATIC BLOCK
 !
 
- if (nind.gt.np1) then
+ if (nind>np1) then
 
 !
 !  POINTER TO FIRST QUADRATIC  BLOCK IN  'POLY'

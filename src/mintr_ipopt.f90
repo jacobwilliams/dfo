@@ -132,13 +132,13 @@ external eval_f, eval_g, eval_c, eval_a, eval_h
 external ev_hlv_dummy, ev_hov_dummy, ev_hcv_dummy
 
 useipopt=1
-if (method .eq. 2) then 
+if (method == 2) then 
    usemerit=.true.
 else
    usemerit=.false.
 endif
 ncont=ncon
-if ( ncnln .le. nnln .and. .not.usemerit) ncon=0
+if ( ncnln <= nnln .and. .not.usemerit) ncon=0
 do i = 1, n
   call dcopy(nclin, a(1,i), 1, amat(1,i), 1)
 enddo
@@ -147,12 +147,12 @@ enddo
 !
 mipopt = nclin + ncnln
 nipopt = n + mipopt
-if( nipopt.gt.dfo_nmax ) then
+if( nipopt>dfo_nmax ) then
    write(*,*) 'DFO_NMAX too small. Must be at least ',nipopt
    inform = 1
    goto 9999
 endif
-if( mipopt.gt.dfo_mmax ) then
+if( mipopt>dfo_mmax ) then
    write(*,*) 'DFO_MMAX too small. Must be at least ',mipopt
    inform = 1
    goto 9999
@@ -171,12 +171,12 @@ nub = n
 !     knows about the right hand side.)
 !
 do i = n+1, n+mipopt
-   if( lwrbnd(i).gt.-dfo_inf ) then
+   if( lwrbnd(i)>-dfo_inf ) then
       nlb         = nlb + 1
       ilb(nlb)    = i
       bnds_l(nlb) = lwrbnd(i)
    endif
-   if( uprbnd(i).lt. dfo_inf ) then
+   if( uprbnd(i)< dfo_inf ) then
       nub         = nub + 1
       iub(nub)    = i
       bnds_u(nub) = uprbnd(i)
@@ -213,48 +213,48 @@ call ipopt(nipopt, x, mipopt, nlb, ilb, bnds_l, nub, iub, &
      eval_f, eval_c, eval_g, eval_a, eval_h, ev_hlv_dummy, &
      ev_hov_dummy, ev_hcv_dummy, dat, idat, nargs, args, cargs)
 call dcopy(n, x, 1, x0, 1)
- if (ierr.eq.0) then
-   if( iprint.ge.3 )    write(iout,8000) 
+ if (ierr==0) then
+   if( iprint>=3 )    write(iout,8000) 
    inform=0
- else if (ierr.eq.1) then
-   if( iprint.ge.3 )    write(iout,8004) 
+ else if (ierr==1) then
+   if( iprint>=3 )    write(iout,8004) 
    inform=3
- else if (ierr.ge.97 .or. ( ierr .ge. 4 .and. ierr .le. 8) &
-          .or. ierr .eq. 15 ) then
-   if( iprint.ge.3 )   write(iout,8009) 
+ else if (ierr>=97 .or. ( ierr >= 4 .and. ierr <= 8) &
+          .or. ierr == 15 ) then
+   if( iprint>=3 )   write(iout,8009) 
    inform=1
  else
-   if( iprint.ge.3 )    write(iout,8001) 
+   if( iprint>=3 )    write(iout,8001) 
    inform=3        
  endif
 
- if ( inform .eq. 3 ) then
+ if ( inform == 3 ) then
    inform = 0
    do 40 i=1, n
-     if ( x0(i) .lt. bnds_l(i) - cnstol .or. &
-          x0(i) .gt. bnds_u(i) + cnstol     ) &
+     if ( x0(i) < bnds_l(i) - cnstol .or. &
+          x0(i) > bnds_u(i) + cnstol     ) &
          inform = 2
 40    continue
-   if ( nclin .gt. 0 .and. inform .eq. 0 ) then
+   if ( nclin > 0 .and. inform == 0 ) then
      do 70 i=1, nclin 
        val = ddot(n, a(i, 1), lda, x0, 1 )
-       if ( val .lt. lwrbnd(n+i) - cnstol .or. &
-            val .gt. uprbnd(n+i) + cnstol     ) &
+       if ( val < lwrbnd(n+i) - cnstol .or. &
+            val > uprbnd(n+i) + cnstol     ) &
             inform = 2
 70      continue
    endif
-   if ( ncnln .gt. 0 .and. inform .eq. 0 ) then
+   if ( ncnln > 0 .and. inform == 0 ) then
      call funcon(1, ncnln+nclin, n, ncnln+nclin, iwrk, x, &
                  wrk, wrk(ncnln+nclin+1), 1)
      do 60 i=1, nnln 
-       if ( wrk(nlin+i) .lt. lwrbnd(n+nlin+i) - cnstol .or. &
-            wrk(nlin+i) .gt. uprbnd(n+nlin+i) + cnstol     ) &
+       if ( wrk(nlin+i) < lwrbnd(n+nlin+i) - cnstol .or. &
+            wrk(nlin+i) > uprbnd(n+nlin+i) + cnstol     ) &
             inform = 2
 60      continue
      if ( .not. usemerit ) then 
        do 80 i=1, ncon 
-         if ( wrk(nlin+nnln+i) .lt. lwrbnd(n+nlin+nnln+i) - cnstol &    ! 
-              .or. wrk(nlin+nnln+i) .gt. uprbnd(n+nlin+nnln+i) &
+         if ( wrk(nlin+nnln+i) < lwrbnd(n+nlin+nnln+i) - cnstol &    ! 
+              .or. wrk(nlin+nnln+i) > uprbnd(n+nlin+nnln+i) &
               + cnstol     ) &
               inform = 3
 80        continue
@@ -262,8 +262,8 @@ call dcopy(n, x, 1, x0, 1)
    endif
  endif
 call funobj(1, n, x, mval, wrk, 1)
-if ( ncon .gt. 0 .and. .not. usemerit) then
-   if ( inform .eq. 0 ) then
+if ( ncon > 0 .and. .not. usemerit) then
+   if ( inform == 0 ) then
      call dcopy(ncon, x(n+nlin+nnln+1), 1, wrk, 1)
    else
      nlint=nlin
@@ -398,7 +398,7 @@ integer idummy, i, j
 !
 !*******************************************************************************
 !
-if( task.eq.0 ) then
+if( task==0 ) then
 !
 !     We assume dense Jacobian for original variables, and have the slacks
 !     for all constraints
@@ -886,14 +886,14 @@ double precision h(nvarmx, nvarmx)
 !
 !*******************************************************************************
 !
-if( task.eq.0 ) then
+if( task==0 ) then
 !
 !     Get number of nonzeros in Hessian of the Lagrangian.  Assume dense
 !     Hessian (for original variables and lower triangular part only)
 !
    nnzh = (idat(1)*(idat(1)+1))/2
 else
-   if( idat(1).gt. nvarmx) then
+   if( idat(1)> nvarmx) then
       write(*,*) &
            'In eval_h: NVARMX too small.  Must be at least', &
            idat(1)

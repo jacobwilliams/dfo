@@ -377,9 +377,9 @@ impdrs = n
 !  -----------------------------------------------
 
 rsneed = ptnwrs + mntrrs + npslrs + impdrs
-if ( lrs .lt.  max( rsneed, mdblrs ) ) &
+if ( lrs <  max( rsneed, mdblrs ) ) &
    then
-   if ( iprint .ge. 0 ) write( iout, 2000 ) &
+   if ( iprint >= 0 ) write( iout, 2000 ) &
           max(rsneed, mdblrs) - lrs
    exit = -3
    return
@@ -451,8 +451,8 @@ mdblis = dd
 !  CHECK IF THE REMAINING INTEGER SPACE IS SUFFICIENT
 !  BY COMPARING IT WITH THE "CRITICAL PATH"
 !
-if ( lis .lt. max(mntris + npslis, mdblis) ) then
-   if ( iprint .ge. 0 ) write( iout, 2020 ) &
+if ( lis < max(mntris + npslis, mdblis) ) then
+   if ( iprint >= 0 ) write( iout, 2020 ) &
         max(mntris + npslis, mdblis) - lis
    exit = -4
    return
@@ -496,7 +496,7 @@ do 5 i=1, m
 !
 
 
-if ( iprint .ge. 2 ) write( iout, 8000 ) 
+if ( iprint >= 2 ) write( iout, 8000 ) 
 pivthr = pivt*delta
 call dcopy (n, wrk(ip+(base-1)*n), 1, wrk(ipi), 1)
 wrk(ivi) = wrk(iv + base - 1)
@@ -525,8 +525,8 @@ call nbuild( wrk(inp)    , wrk(ip)     , wrk(iv)     , wrk(ipi), &
 !  IF THE BASIS CONSISTS ONLY OF A SINGLE POLYNOMIAL (CONSTANT TERM)
 !  THEN SOMETHING IS WRONG. WE STOP AND PRINT A MESSAGE      
 !
-if (nind.lt.2) then
-  if ( iprint .ge. 0 ) write(iout, 2060)
+if (nind<2) then
+  if ( iprint >= 0 ) write(iout, 2060)
   exit=-9
   return
 endif
@@ -563,7 +563,7 @@ impr  = 3
 !
 do 200 iter = 1, maxit
 
-   if ( iprint .ge. 2 ) write( iout, 8010 ) iter
+   if ( iprint >= 2 ) write( iout, 8010 ) iter
 !
 !  SET THE CURRENT VALUES FOR PIVOT-RELATES THRESHOLDS
 !       
@@ -576,20 +576,20 @@ do 200 iter = 1, maxit
 ! 
    fbase  = wrk( lv + iwrk( lin2sp + base ))
    do 10 i = 1, nind
-     if (( i .le. n+1-neqcon .or. i .gt. n+1 ) .and. &
-     ( wrk( lv + iwrk( lin2sp + i )) .le. fbase - ten * mcheps)) &
+     if (( i <= n+1-neqcon .or. i > n+1 ) .and. &
+     ( wrk( lv + iwrk( lin2sp + i )) <= fbase - ten * mcheps)) &
           then
        fbase = wrk(lv + iwrk( lin2sp + i ))
        base  = i
      endif
 10    continue
-   if ( iprint .ge. 2 ) write( iout, 8020 ) base, nind
+   if ( iprint >= 2 ) write( iout, 8020 ) base, nind
 
 !
 !  IF THE BASE POINT HAD CHANGED, WE NEED TO RECOMPUTE THE DISTANCES
 !  FROM BASE TO ALL SAMPLE POINTS IN "POINTS" 
 !
-   if ( obase .ne. base ) then 
+   if ( obase /= base ) then 
       lbase = lpi + ( base - 1 ) * n
       ibase = lbase + 1
       obase = base
@@ -607,7 +607,7 @@ do 200 iter = 1, maxit
 !
 !  NEQCON - NUMBER OF LINEARLY INDEPENDENT EQUALITY CONSTRAINTS
 !
-   if ( odelta .ne. delta ) then
+   if ( odelta /= delta ) then
      call dcopy ( n, wrk(ibase), 1, wrk(ik), 1 )
      call unshft( n, x, wrk(ik) )
      call intdim( wrk(ik)   , n   , nclin , ncnln , neqcon, &
@@ -627,7 +627,7 @@ do 200 iter = 1, maxit
 !
 
    okgeom= .false.
-   linear=( nind .gt. n - neqcon ) 
+   linear=( nind > n - neqcon ) 
 !
 !  IF THERE ARE EQUALITY CONSTRAINTS, THEN UPON REACHING THE MAXIMUM
 !  POSSIBLE NUMBER OF POINTS FOR LINEAR INTERPOLATION WE COMPLETE
@@ -638,7 +638,7 @@ do 200 iter = 1, maxit
 !  ELEMENTS WE MAKE SURE THAT WE CAN MOVE ON TO QUADRATIC ELEMENTS.  
 !
    
-   if ( neqcon .gt. 0 .and. nind .eq. n + 1 - neqcon ) then
+   if ( neqcon > 0 .and. nind == n + 1 - neqcon ) then
      call complt( wrk(inp), wrk(ivi), wrk(ipiv), n, nind, lpoly )
    endif
 
@@ -649,10 +649,10 @@ do 200 iter = 1, maxit
 !  NINDR - NUMBER OF ELEMENTS IN THE INTERPOLATION (WITHOUT THE DUMMY)  
 !
    
-   if ( iprint .ge. 1 ) then
+   if ( iprint >= 1 ) then
      nindr = nind
-     if ( nind .gt. n + 1 - neqcon ) nindr = nind - neqcon
-!           IF (ITER.EQ.( ITER/10 )*10 +1 ) WRITE( IOUT, 1000 )
+     if ( nind > n + 1 - neqcon ) nindr = nind - neqcon
+!           IF (ITER==( ITER/10 )*10 +1 ) WRITE( IOUT, 1000 )
      write( iout, 1000 )
      write( iout, 1010) iter, nf, fbase, rho, delta, impr, nindr, &
                         neqcon
@@ -661,9 +661,9 @@ do 200 iter = 1, maxit
 !  STOPPING TEST: IF THE TRUST REGION RADIUS IS SMALL ENOUGH, WE STOP
 !                 IF THE BEST VALUE HAS REACHED THE LOWER BOUND, WE STOP
 !
-   if ( iprint .ge. 2 ) write( iout, 8030 ) delta 
-   if ( ( howstop.eq.2 .and. stopcnt.ge.2) &
-         .or. (delta .lt. delmin) ) then 
+   if ( iprint >= 2 ) write( iout, 8030 ) delta 
+   if ( ( howstop==2 .and. stopcnt>=2) &
+         .or. (delta < delmin) ) then 
      exit = 0
      call bestpt(n, m, x, fx, c, wrk(ip), wrk(iv), wrk(iob), &
                  wrk(ic), nq)
@@ -673,19 +673,19 @@ do 200 iter = 1, maxit
 !
 !  IN DEBUGGING MODE, CHECK THE ACCURACY OF NEWTON FUNDAMENTAL POLYNOMIALS
 !
- if ( iprint .ge. 3 ) then
+ if ( iprint >= 3 ) then
    do 30 i = 2, nind
-     if( i .le.  n + 1 - neqcon) then
+     if( i <=  n + 1 - neqcon) then
        ii = min( n + 1 - neqcon, nind )
      else 
        ii = nind
      endif
      do 20 j = 1, ii
-      if (j .le. n + 1 - neqcon .or. j .gt. n + 1 ) then
+      if (j <= n + 1 - neqcon .or. j > n + 1 ) then
         call  evalnp( val, wrk(ipi), j, wrk(inp), i, n, &
                       lptint , lpoly )
-        if ( (i.eq.j .and. abs(val-one) .gt. 1d-10) .or. &
-             (i.ne.j .and. abs(val)     .gt. 1d-10) ) then
+        if ( (i==j .and. abs(val-one) > 1d-10) .or. &
+             (i/=j .and. abs(val)     > 1d-10) ) then
           write(iout,1020) i, j, val
         endif
       endif
@@ -693,12 +693,12 @@ do 200 iter = 1, maxit
 30    continue
  endif
 
- if ( method .le. 2 ) then
+ if ( method <= 2 ) then
 !  ---------------------------------------------------------------------
 !  BUILD THE QUADRATIC MODEL OF THE OBJECTIVE FUNCTION
 !  ---------------------------------------------------------------------
 
-   if ( iprint .ge. 2 ) write( iout, 8040 ) 
+   if ( iprint >= 2 ) write( iout, 8040 ) 
    do 31 j=1, nind
      ii = iwrk(lin2sp + j)
      wrk(lvi + j) = wrk( lob + ii ) 
@@ -731,7 +731,7 @@ do 200 iter = 1, maxit
 !  BUILD THE QUADRATIC MODEL OF THE MERRIT FUNCTION
 !  ---------------------------------------------------------------------
 
-   if ( iprint .ge. 2 ) write( iout, 8040 ) 
+   if ( iprint >= 2 ) write( iout, 8040 ) 
    do 34 j=1, nind
      ii = iwrk(lin2sp + j)
      wrk(lvi + j) = wrk( lv + ii ) 
@@ -744,17 +744,17 @@ do 200 iter = 1, maxit
 !
 !  IN DEBUGGING MODE CHECK THE ACCURACY OF QUADRATIC INTERPOLATION
 !
- if ( iprint .ge. 3 ) then
+ if ( iprint >= 3 ) then
    do 41 i=1, m
      do 40 j = 1, nind
-       if ( j .le. n + 1 - neqcon .or. j .gt. n + 1 ) then
+       if ( j <= n + 1 - neqcon .or. j > n + 1 ) then
          ii = (iwrk(lin2sp + j)-1)*m
          wrk(lci + j) = wrk(lc + ii + i) 
          val = wrk(lci + j) - (wrk(lcc+i) + &
                mvalue( n, wrk( ipi+(j-1)*n), &
                wrk(icl+(i-1)*n), wrk( icq+(i-1)*n*n ), &
                wrk( icurw ), lrs))
-         if ( abs(val) .gt. 1.0d-6 ) write(iout,1030)  j, val 
+         if ( abs(val) > 1.0d-6 ) write(iout,1030)  j, val 
        endif
 40      continue
 41    continue  
@@ -804,7 +804,7 @@ do 200 iter = 1, maxit
 51    continue   
 
  
- if ( method .le. 2 ) then
+ if ( method <= 2 ) then
    do 60 k=1, m
      ccon(k)=wrk(lcc+k)
      kk=(k-1)*n
@@ -823,7 +823,7 @@ do 200 iter = 1, maxit
 !
 !  PRINT OUT MODEL COEFFICIENT IF DEMANDED
 !
- if ( iprint .ge. 3 ) then
+ if ( iprint >= 3 ) then
    write( iout, 8050 )
    write( iout, 8051 )
    do 62  i = 1, n
@@ -854,8 +854,8 @@ do 200 iter = 1, maxit
 !  MINIMIZE THE MODIFIED MODEL 
 !
 
- if ( iprint .ge. 2 ) write( iout, 8065 ) 
- if ( method .le. 2 ) then
+ if ( iprint >= 2 ) write( iout, 8065 ) 
+ if ( method <= 2 ) then
    call mintr (n         , wrk( ik ), mval        , del  , lb, &
                ub        , a        , lda         , nclin,m+ncnln, &
                wrk(icurw), lrs      , iwrk(icuriw), lis  , inform, &
@@ -876,7 +876,7 @@ do 200 iter = 1, maxit
 !  THEN RUN MINTR AGAIN MINIMIZING UNCONSTRAINED MERIT FUNCTION
 !
 
- if ( method .eq. 2 .and. inform.eq. 3 ) then 
+ if ( method == 2 .and. inform== 3 ) then 
    usemer=.true.
    call mintr (n         , wrk( ik ), mval        , del  , lb, &
                ub        , a        , lda         , nclin, ncnln , &
@@ -884,13 +884,13 @@ do 200 iter = 1, maxit
                2         )
  else
    usemer=.false.
-   if ( inform .eq. 3 ) inform = 0
+   if ( inform == 3 ) inform = 0
  endif
 !
 !  IF NO FEASIBLE POINT FOUND, THEN CONSIDER REDUCTION TO BE ZERO
 !
 
- if (inform .eq. 2 ) then
+ if (inform == 2 ) then
    val = fbase
    goto 81
  endif 
@@ -898,7 +898,7 @@ do 200 iter = 1, maxit
 !
 !  IF THE MINIMIZATION FAILED, THEN RECORD THE BEST POINT AND EXIT
 !
- if (inform.ne.0) then
+ if (inform/=0) then
    call bestpt(n, m, x, fx, c, wrk(ip), wrk(iv), wrk(iob), &
                wrk(ic), nq)
    it    = iter
@@ -908,7 +908,7 @@ do 200 iter = 1, maxit
 !
 !  COMPUTE THE PREDICTED VALUE OF THE MERIT FUNCTION
 !
- if ( method .eq. 1 .or. (method .eq. 2 .and. .not. usemer) ) then
+ if ( method == 1 .or. (method == 2 .and. .not. usemer) ) then
    call fmerit(m, val, mval+kmod, wrk(icurw), &
                ub(n+nclin+ncnln+1), lb(n+nclin+ncnln+1), pp, &
                method )
@@ -940,10 +940,10 @@ do 200 iter = 1, maxit
 !
  noisef = half * max( anoise, abs( fbase ) ) * rnoise
 
- if ( prered .lt. max( noisef,delmin*1.0d-2) .or. &
-      prered .lt. delmin*abs(fbase) .and. snorm .lt. delmin .or. &
-      prered .lt. cnstol*abs(fbase)*1.0d-3 ) then
-   if ( iprint .ge. 2 ) write( iout, 8067 ) prered
+ if ( prered < max( noisef,delmin*1.0d-2) .or. &
+      prered < delmin*abs(fbase) .and. snorm < delmin .or. &
+      prered < cnstol*abs(fbase)*1.0d-3 ) then
+   if ( iprint >= 2 ) write( iout, 8067 ) prered
    rho   = -thous
 !
 !  SET INDICATORS THAT NO NEW POINT WAS ADDED TO INTERPOLATION SET
@@ -966,7 +966,7 @@ do 200 iter = 1, maxit
 !  THE BEST POINT AND EXIT
 !
    nf = nf + 1
-   if ( nf .gt. maxnf ) then
+   if ( nf > maxnf ) then
      call bestpt(n, m, x, fx, c, wrk(ip), wrk(iv), wrk(iob), &
                  wrk(ic), nq)
      it   = iter
@@ -978,9 +978,9 @@ do 200 iter = 1, maxit
 !  COMPUTE THE FUNCTION VALUE AT THE NEW POINT
 !
    call unshft(n, x, wrk(ik))
-   if ( scale .ne. 0 ) call unscl( n, wrk(ik), scal )
+   if ( scale /= 0 ) call unscl( n, wrk(ik), scal )
    call fun( n, m, wrk( ik ), wrk(iob+nq), wrk(ic + nq*m), iferr )
-   if ( scale .ne. 0 ) call scl( n, wrk(ik), scal )
+   if ( scale /= 0 ) call scl( n, wrk(ik), scal )
 !
 !  IF FUNCTION COMPUTATION FAILS, THEN REDUCE THE RADIUS FOR 
 !  MINIMIZATION TO HALF OF THE DISTANCE BETWEEN THE NEW POINT 
@@ -988,7 +988,7 @@ do 200 iter = 1, maxit
 !
    if (iferr) then
      del  = snorm/2
-     if ( del .ge. delmin ) then 
+     if ( del >= delmin ) then 
        goto 70
      else
        rho   = -thous
@@ -1020,14 +1020,14 @@ do 200 iter = 1, maxit
 !  -----------------------------------------------------------
 
    rho = ( fbase - fnq ) / prered
-   if ( iprint .ge. 2 ) write( iout, 8080 ) rho
+   if ( iprint >= 2 ) write( iout, 8080 ) rho
 
 !  ------------------------------------------------------------
 !  COMPUTE RELATIVE ACHIEVED REDUCTION AND CHECK IF IT IS SMALL
 !  ------------------------------------------------------------
    val = ( fbase - fnq ) /(one+abs(fbase))
-   if ( ( val .gt. 0 ).and. ( val .lt. whenstop).and. &
-        ( rho .gt. rhomin )) then
+   if ( ( val > 0 ).and. ( val < whenstop).and. &
+        ( rho > rhomin )) then
      stopcnt=stopcnt+1
    else
      stopcnt=0
@@ -1043,9 +1043,9 @@ do 200 iter = 1, maxit
 !  DELTA LANDED ON THE TRUST REGION BOUND
 !
 
-   if ( rho .ge. rhojmp  .and. rho .le. two - rhojmp &
-            .and. abs(snorm-delta).lt.cnstol ) then
-     if ( iprint .ge. 2 ) write( iout, 8085 )
+   if ( rho >= rhojmp  .and. rho <= two - rhojmp &
+            .and. abs(snorm-delta)<cnstol ) then
+     if ( iprint >= 2 ) write( iout, 8085 )
      theta = zero
      do 90 i = 1, nq - 1
 !
@@ -1053,15 +1053,15 @@ do 200 iter = 1, maxit
 !  AND ARE FURTHER THAT DELTA AWAY  FROM THE BASE COMPUTE THE AGREEMENT
 !  BETWEEN THE MODEL AND FUNCTION
 !
-       if ( iwrk( lsp2in+ i ) .eq. 0   .and. &
-            wrk(  ld + i ) .ge. delta ) then
+       if ( iwrk( lsp2in+ i ) == 0   .and. &
+            wrk(  ld + i ) >= delta ) then
          ibeg = lp + (i-1) * n 
 !
 !  COMPUTE THE PREDICTED VALUE OF THE MERIT FUNCTION
 !
          mval= mvalue( n, wrk( ibeg+1 ), wrk( ig ), &
                        wrk( ih ), wrk( icurw), lrs )
-         if ( method .le. 2  ) then
+         if ( method <= 2  ) then
            call fmerit(m, val, mval+kappa, wrk(ici+(i-1)*m), &
                        ub(n+nclin+ncnln+1), lb(n+nclin+ncnln+1), &
                        pp, method )
@@ -1069,14 +1069,14 @@ do 200 iter = 1, maxit
            val = mval + kappa
          endif
          val=val-fbase
-         if ( abs(val).gt.mcheps ) then
+         if ( abs(val)>mcheps ) then
            rhow = ( wrk( lv + i ) - fbase ) / val
 !
 !  IF FOR A GIVEN POINT THE AGREEMENT IF GOOD, THEN WE TRY TO JUMP 
 !  AT LEAST AS FAR AS THIS POINT FROM THE BASE
 !
-           if ( rhow .ge. one - rhomin .and. &
-                rhow .le. one + rhomin      ) then
+           if ( rhow >= one - rhomin .and. &
+                rhow <= one + rhomin      ) then
              theta = max( theta, wrk( ld + i ) )
            endif 
          endif                  
@@ -1087,7 +1087,7 @@ do 200 iter = 1, maxit
 !  MAKE SURE THAT THE SIZE OF THE JUMP DOES NOT EXCEED THE LIMIT
 !          
      theta = min( theta, maxjmp * delta )
-     if ( iprint .ge. 2 ) write( iout, 8090 ) theta
+     if ( iprint >= 2 ) write( iout, 8090 ) theta
        
      del = theta
 
@@ -1096,7 +1096,7 @@ do 200 iter = 1, maxit
 !  THAN THE AREA THAT WOULD BE COVERED BY THE NEXT ITERATION) THEN
 !  COMPUTE THE JUMP
 !
-100      if ( del .gt. snorm + ratio * delta) then
+100      if ( del > snorm + ratio * delta) then
 
 !
 !  SET INITIAL POINT TO THE BASE POINT AND SHIFT IT TO ORIGINAL POSITION
@@ -1106,7 +1106,7 @@ do 200 iter = 1, maxit
 !
 !  CALL MINIMIZATION
 !
-       if ( method .le. 2 ) then 
+       if ( method <= 2 ) then 
          call mintr( n           , wrk(ik), mval      , del, &
                      lb          , ub     , a         , lda, &
                      nclin       , m      , wrk(icurw), lrs, &
@@ -1118,12 +1118,12 @@ do 200 iter = 1, maxit
                      iwrk(icuriw), lis    , inform    , method ) 
        endif
        call shift(n, x, wrk(ik) )
-       if ( inform .eq. 3 ) inform=0
-       if ( inform .eq. 2 ) goto 115
+       if ( inform == 3 ) inform=0
+       if ( inform == 2 ) goto 115
 !
 !  COMPUTE THE PREDICTED VALUE OF THE MERIT FUNTION
 !
-       if ( method .le. 2 ) then
+       if ( method <= 2 ) then
          call fmerit(m, val, mval+kmod, wrk(icurw), &
           ub(n+nclin+ncnln+1), lb(n+nclin+ncnln+1), pp, &
           method )
@@ -1133,7 +1133,7 @@ do 200 iter = 1, maxit
 !
 !  IF MINIMIZATION HAD FAILED, THEN RECORD THE BEST POINT AND EXIT
 !
-       if (inform.ne.0) then
+       if (inform/=0) then
          call bestpt(n, m, x, fx, c, wrk(ip), wrk(iv), wrk(iob), &
                  wrk(ic), nq)
          it   = iter
@@ -1148,19 +1148,19 @@ do 200 iter = 1, maxit
          wrk(lcurw+i)=wrk(lk+i)-wrk(lbase+i)
 110        continue
        stnorm  = dnrmnf( n, wrk( icurw ) )
-       if ( iprint .ge. 2 ) write( iout, 8092 ) stnorm
+       if ( iprint >= 2 ) write( iout, 8092 ) stnorm
 !
 !  IF THE ACTUAL JUMP IS LARGE ENOUGH THEN SAMPLE THE FUNCTION VALUE
 !  AT THE NEW POINT
 !
-       if ( stnorm .gt.  snorm + ratio * delta ) then
+       if ( stnorm >  snorm + ratio * delta ) then
          call dcopy(n, wrk(ik), 1, wrk( inq + n ), 1)
          nf = nf + 1
 !
 !  IF THE NUMBER OF FUNCTION CALLS EXCEEDS MAXIMUM, THEN RECORD THE
 !  BEST POINT AND EXIT
 !
-         if ( nf .ge. maxnf ) then
+         if ( nf >= maxnf ) then
            call bestpt(n, m, x, fx, c, wrk(ip), wrk(iv), wrk(iob), &
                        wrk(ic), nq)
            it   = iter
@@ -1172,17 +1172,17 @@ do 200 iter = 1, maxit
 !  COMPUTE THE FUNCTION VALUE 
 !
          call unshft(n, x, wrk(ik))
-         if ( scale .ne. 0 ) call unscl( n, wrk(ik), scal )
+         if ( scale /= 0 ) call unscl( n, wrk(ik), scal )
          call fun( n, m, wrk( ik ), wrk(iob+nq), wrk(ic + nq*m), &
                    iferr )
-         if ( scale .ne. 0 ) call scl( n, wrk(ik), scal )
+         if ( scale /= 0 ) call scl( n, wrk(ik), scal )
 !
 !  IF THE FUNCTION COMPUTATION FAILS THEN REDUCE THE SIZE OF THE JUMP
 !  AND TRY TO COMPUTE A NEW JUMP
 !
          if ( iferr ) then 
            del=stnorm/2
-           if ( del .ge. delta ) then 
+           if ( del >= delta ) then 
              goto 100
            else
              goto 115
@@ -1193,7 +1193,7 @@ do 200 iter = 1, maxit
 !  IF THE FUNCTION VALUE IS COMPUTED THEN RECORD IT AND DO APPROPRIATE
 !  BOOKKEEPING AND UPDATES
 !
-         if ( iprint .ge. 2 ) write( iout, 8095 )
+         if ( iprint >= 2 ) write( iout, 8095 )
          call fmerit(m, ft, wrk(iob+nq), wrk(ic + nq*m), &
               ub(n+nclin+ncnln+1), lb(n+nclin+ncnln+1), &
               pp, method )
@@ -1213,7 +1213,7 @@ do 200 iter = 1, maxit
 !  HE INTERPOLATION SET
 !
             
-         if ( ft .lt.  fnq ) then
+         if ( ft <  fnq ) then
          
 !
 !  COMPUTE 'RHO' - ACHIEVED REDUCTION VS. PREDICTED REDUCTION
@@ -1222,7 +1222,7 @@ do 200 iter = 1, maxit
            next  = nq
            snorm = stnorm
            impr  = 20
-           if ( iprint .ge. 2 ) write( iout, 8097 ) rho
+           if ( iprint >= 2 ) write( iout, 8097 ) rho
          endif
        endif
      endif
@@ -1249,17 +1249,17 @@ do 200 iter = 1, maxit
 !  THE NEXT POINT IN THE MODEL
 !
 
-   if ( rho .gt. rhomin ) then
-     if ( iprint .ge. 2 ) write( iout, 8100 ) 
+   if ( rho > rhomin ) then
+     if ( iprint >= 2 ) write( iout, 8100 ) 
 !
 !  IF THE MODEL IS INCOMPLETE, THEN WE ADD THE NEXT POINT TO THE
 !  MODEL ( IF EFFORT >= 4, THEN IT WILL BE DONE LATER )
 !
-     if ( nind .lt. dd .and. effort .lt. 4 ) then
+     if ( nind < dd .and. effort < 4 ) then
 !
 !  DETERMINE THE INDEX OF LAST POLYNOMIAL IN THE CURRENT BLOCK
 !
-       if ( nind .le. n ) then
+       if ( nind <= n ) then
          ipend = n + 1
        else
          ipend = dd
@@ -1288,7 +1288,7 @@ do 200 iter = 1, maxit
 !  AS THE NEXT AND DO NOT CHECK OTHER POLYNOMIALS.
 !
           
-         if (abs(val) .gt. pivthr ) go to 130
+         if (abs(val) > pivthr ) go to 130
 
 120        continue
        go to 140
@@ -1296,7 +1296,7 @@ do 200 iter = 1, maxit
 !  PLACE THE IPOLY-TH POLYNOMIAL IN THE PLACE OF NIND+1-ST
 !  POLYNOMIAL, BY SWAPPING THEM IN ARRAY POLY
 !
-130        if ( ipoly .ne. nind+1 ) then
+130        if ( ipoly /= nind+1 ) then
          call swapnp( n, nind+1, ipoly, wrk(inp), lpoly )
        endif
 !
@@ -1320,7 +1320,7 @@ do 200 iter = 1, maxit
 !  IF EFFORT = 4 THEN WE CHANGE THE BASE TO THE NEW BEST POINT
 !  ( OTHERWISE THE BASE WILL BE CHANGED LATER )
 !
-       if ( effort .eq. 4 ) then
+       if ( effort == 4 ) then
          base              = nind 
          lbase = lpi + ( base - 1 ) * n
          ibase = lbase + 1
@@ -1328,7 +1328,7 @@ do 200 iter = 1, maxit
          call getdis( n, nq, 0 , wrk( ip ) , iwrk(lin2sp+base), &
                       wrk( id ), wrk(icurw), lrs )
        endif
-       if ( iprint .ge. 2 ) write( iout, 8110 ) val
+       if ( iprint >= 2 ) write( iout, 8110 ) val
      endif
 
 
@@ -1341,7 +1341,7 @@ do 200 iter = 1, maxit
 !  ( IF EFFORT >= 4, THEN IT WILL BE DONE LATER )
 !
 
-     if ( ifadd.eq.0 ) then
+     if ( ifadd==0 ) then
 !
 !  IF THE PIVOT IS TOO SMALL AND THE MODEL IS NOT FULLY LINEAR
 !  SET A FLAG TO MAKE SURE THAT WE TRY TO ADD A 'GEOMETRY' POINT
@@ -1370,7 +1370,7 @@ do 200 iter = 1, maxit
 !  IF EFFORT = 4 THEN WE CHANGE THE BASE TO THE NEW BEST POINT
 !  ( OTHERWISE THE BASE WILL BE CHANGED LATER )
 !
-         if ( effort .eq. 4 ) then
+         if ( effort == 4 ) then
            base              = ipoly 
            lbase = lpi + ( base - 1 ) * n
            ibase = lbase + 1
@@ -1378,7 +1378,7 @@ do 200 iter = 1, maxit
            call getdis( n, nq, 0 , wrk( ip ) , iwrk(lin2sp+base), &
                         wrk( id ), wrk(icurw), lrs )
          endif
-         if ( iprint .ge. 2 ) write( iout, 8120 ) ipoly,  val
+         if ( iprint >= 2 ) write( iout, 8120 ) ipoly,  val
        endif
      endif
 !
@@ -1387,17 +1387,17 @@ do 200 iter = 1, maxit
 !
 
    else
-     if ( iprint .ge. 2 ) write( iout, 8105 )
+     if ( iprint >= 2 ) write( iout, 8105 )
 !
 !  IF THE MODEL IS INCOMPLETE TRY ADDING THE NEW POINT
 !  IF THE EFFORT >= 3 TRY TO DO IT LATER
 !
 
-     if ( nind.lt.dd .and. effort .lt. 3 ) then
+     if ( nind<dd .and. effort < 3 ) then
 !
 !  DETERMINE THE INDEX OF LAST POLYNOMIAL IN THE CURRENT BLOCK
 !
-       if ( nind .le. n ) then
+       if ( nind <= n ) then
          ipend = n + 1
        else
          ipend = dd
@@ -1428,7 +1428,7 @@ do 200 iter = 1, maxit
 !  REDUCTION)  THEN ADD THE POINT TO THE INTERPOLATION SET,
 !  UPDATING OTHER NEWTON POLYNOMIALS
 !                
-         if (abs(val) .gt. addthr ) go to 160
+         if (abs(val) > addthr ) go to 160
 
 150        continue
 !
@@ -1440,7 +1440,7 @@ do 200 iter = 1, maxit
 !  PLACE THE IPOLY-TH POLYNOMIAL IN THE PLACE OF NIND+1-ST
 !  POLYNOMIAL, BY SWAPPING THEM IN ARRAY POLY
 !
-160        if (ipoly .ne. nind+1) then
+160        if (ipoly /= nind+1) then
          call swapnp(n, nind+1, ipoly, wrk(inp), lpoly)
        endif
 
@@ -1464,7 +1464,7 @@ do 200 iter = 1, maxit
        iwrk(lin2sp+nind) = next
        wrk(lpiv+nind)    = val
        ifadd             = 1
-       if ( iprint .ge. 2 ) write( iout, 8110 ) val
+       if ( iprint >= 2 ) write( iout, 8110 ) val
      endif
  
 !
@@ -1474,7 +1474,7 @@ do 200 iter = 1, maxit
  endif
 170  continue
 
- if ( iprint .ge. 3 ) then
+ if ( iprint >= 3 ) then
    write( iout, 8170 )
    do 175 i = 1, nind
      write( iout, 8055 ) wrk(ipiv + i - 1)
@@ -1483,12 +1483,12 @@ do 200 iter = 1, maxit
 !
 !  IF THE IMPROVEMENT OF THE MODEL IS REQUIRED, SET IMPR TO 0
 ! 
- if ( (ifadd .eq. 0) .or. (ifxg .eq. 1) ) impr = 0
+ if ( (ifadd == 0) .or. (ifxg == 1) ) impr = 0
 !
 !  IF THE NEW POINT HASN'T BEEN ADDED, BUT IT GIVES REDUCTION, THEN
 !  SET A VALUE OF IMPR, SO THAT THIS POINT IS SET TO BASE IN 'IMPMOD' 
 ! 
- if ( ifadd.eq.0 .and. rho.gt. rhomin ) impr=-next
+ if ( ifadd==0 .and. rho> rhomin ) impr=-next
 !
 !  TRY TO IMPROVE THE MODEL (BY FINDING ANOTHER POINT OR  RECOMPUTING
 !  THE BASIS OF NEWTON POLYNOMIALS AND THE INTERPOLATION SET IF:
@@ -1498,16 +1498,16 @@ do 200 iter = 1, maxit
 !         AWAY FROM THE FIRST INTERPOLATION POINT
 !      4. IF THE EFFORT LEVEL REQUIRES INTERPOLATION TO BE RECOMPUTED      
 !
- if (  impr .le. 0                            .or. &
-      (wrk(ld+iwrk(iin2sp)) .gt. layer*delta) .or. &
-      (effort .eq. 3 .and. rho .le. rhomin)   .or. &
-       effort .eq. 4 ) then
+ if (  impr <= 0                            .or. &
+      (wrk(ld+iwrk(iin2sp)) > layer*delta) .or. &
+      (effort == 3 .and. rho <= rhomin)   .or. &
+       effort == 4 ) then
 
 !
 !  CHECK IF THE NUMBER IF FUNCTION CALLS REACHED MAXIMUM
 !  IF IT DOES RECORD THE BEST POINT AND EXIT
 !
-   if ( nf .ge. maxnf ) then
+   if ( nf >= maxnf ) then
      call bestpt(n, m, x, fx, c, wrk(ip), wrk(iv), wrk(iob), &
                  wrk(ic), nq)
      it   = iter
@@ -1519,10 +1519,10 @@ do 200 iter = 1, maxit
 !  BLOCK REACHES THE MAXIMUM POSSIBLE SIZE (MORE DETAILS ABOVE)
 !
 
-   if ( neqcon .gt. 0 .and. nind .eq. n + 1 - neqcon ) then
+   if ( neqcon > 0 .and. nind == n + 1 - neqcon ) then
      call complt( wrk(inp), wrk(ivi), wrk(ipiv), n, nind, lpoly )
    endif              
-   if ( iprint .ge. 2 ) write( iout, 8140 )
+   if ( iprint >= 2 ) write( iout, 8140 )
    call impmod( wrk(inp)    , wrk(ipi)    , wrk(ivi)    , wrk(ip), &    ! 
                 wrk(iv)     , wrk(iob)    , wrk(ic)     , &
                 iwrk(isp2in), iwrk(iin2sp), n, m   , &
@@ -1539,7 +1539,7 @@ do 200 iter = 1, maxit
 !  CHECK IF THE NUMBER IF FUNCTION CALLS EXCEEDS MAXIMUM
 !  IF IT DOES RECORD THE BEST POINT AND EXIT
 !
-   if ( nf .ge. maxnf ) then
+   if ( nf >= maxnf ) then
      call bestpt(n, m, x, fx, c, wrk(ip), wrk(iv), wrk(iob), &
                  wrk(ic), nq)
      it   = iter
@@ -1554,8 +1554,8 @@ do 200 iter = 1, maxit
 !  THEN SOMETHING IS WRONG. WE RETURN AND PRINT A MESSAGE      
 !
 
-   if (nind.lt.2) then
-     if ( iprint .ge. 0 ) write(iout, 2060)
+   if (nind<2) then
+     if ( iprint >= 0 ) write(iout, 2060)
      call bestpt(n, m, x, fx, c, wrk(ip), wrk(iv), wrk(iob), &
                  wrk(ic), nq)
      it    = iter
@@ -1567,7 +1567,7 @@ do 200 iter = 1, maxit
 !  WE UPDATE THE POINTERS TO THE LAST POINT ACCORDINGLY
 !
 
-   if ( oldnq .ne. nq ) then
+   if ( oldnq /= nq ) then
      lnq   = lp  + (nq-1)*n
      inq   = lnq + 1
      oldnq = nq
@@ -1584,8 +1584,8 @@ do 200 iter = 1, maxit
 !  THE MODEL WAS NOT FULLY LINEAR. THIS CAN HAPPEN IN "DEGENERATE"
 !  CONSTRAINED  CASES
 !
- if ((( impr .ge. 4  .or. rho .eq. - thous) .and. linear) &
-       .or. impr .eq. 0 ) okgeom=.true.
+ if ((( impr >= 4  .or. rho == - thous) .and. linear) &
+       .or. impr == 0 ) okgeom=.true.
 
 
 !  --------------------------------------------------------------
@@ -1599,16 +1599,16 @@ do 200 iter = 1, maxit
 !  IF THE REDUCTION IF GOOD, INCREASE DELTA ACCORDING TO 
 !  THE STEP TAKEN BY TRUST REGION  MINIMIZATION  
 !
- if ( rho .ge. rhoinc .or. impr .eq. 20 ) then
-   if ( iprint .ge. 2 ) write( iout, 8130 )
+ if ( rho >= rhoinc .or. impr == 20 ) then
+   if ( iprint >= 2 ) write( iout, 8130 )
    delta = max( delta, min( delmax, ratio*snorm ))
 
 !
 !  IF THE REDUCTION WAS BAD, AND THE MODEL WAS ALREADY GOOD ENOUGH
 !  THEN REDUCE DELTA
 !
- elseif ( rho .lt. rhomin .and. okgeom ) then
-   if ( iprint .ge. 2 ) write( iout, 8150 )
+ elseif ( rho < rhomin .and. okgeom ) then
+   if ( iprint >= 2 ) write( iout, 8150 )
    delthr =  ratio  * delmin
    delta = max( delta / ratio,  delthr )
  endif
@@ -1619,11 +1619,11 @@ do 200 iter = 1, maxit
 !  FURTHER IMPROVEMENT
 !
 
- if ( delta .le. ratio * delmin + 10*mcheps .and. &
-      rho  .lt. rhomin  ) then
-   if ( iprint .ge. 2 ) write( iout, 8160 )
+ if ( delta <= ratio * delmin + 10*mcheps .and. &
+      rho  < rhomin  ) then
+   if ( iprint >= 2 ) write( iout, 8160 )
    nstop = nstop + 1
-   if (  nstop .ge. 5 .and. okgeom ) then
+   if (  nstop >= 5 .and. okgeom ) then
      delta = half * delmin
    endif
  else
@@ -1750,7 +1750,7 @@ call unshft( n, x, points((nq-1)*n + 1) )
 imin = nq
 do 10 i = nq-1, 1, -1
   call unshft( n, x, points((i-1)*n + 1) )
-  if ( values(i) .lt. val - mcheps ) then
+  if ( values(i) < val - mcheps ) then
     val  = values(i)
     imin = i
   endif
@@ -2000,13 +2000,13 @@ icurw = imat  +(nclin + ncnln + n) * n
 !  CHECK IF MEMORY IS SUFFICIENT
 !
 lrs = lwrk - icurw + 1
-if ( lrs .lt. 4*n ) then
-  if ( iprint .ge. 0 ) write( iout, 1000 ) - lrs - 4*n + 1 
+if ( lrs < 4*n ) then
+  if ( iprint >= 0 ) write( iout, 1000 ) - lrs - 4*n + 1 
   stop
 endif
 
-if ( liwrk .lt. n ) then
-  if ( iprint .ge. 0 ) write( iout, 1100 ) - liwrk - n + 1 
+if ( liwrk < n ) then
+  if ( iprint >= 0 ) write( iout, 1100 ) - liwrk - n + 1 
   stop
 endif
 !
@@ -2021,7 +2021,7 @@ call rzrvec( wrk(imat), ldmat*n )
 !
 !  IF THERE ARE NONLINEAR CONSTRAINTS, COMPUTE THEIR JACOBIAN
 !
-if ( ncnln .gt. 0 ) then 
+if ( ncnln > 0 ) then 
    usemerit=.true.
    call funcon(2, ncnln  , n, ldcj   , iwrk, &
                x, wrk(ic), wrk(icjac), 1     )
@@ -2038,10 +2038,10 @@ endif
 !   
 m = 0 
 do 20 i=1, n
-  if ( ub(i)-lb(i) .lt. pivthr ) then
+  if ( ub(i)-lb(i) < pivthr ) then
     do 10 j = 1, n
       m = m + 1
-      if ( j .eq. i ) then
+      if ( j == i ) then
         wrk( lmat + (j-1)*ldmat + i )= one
       else
         wrk( lmat + (j-1)*ldmat + i )= zero
@@ -2056,7 +2056,7 @@ do 20 i=1, n
 !
 
 do 30 i=1 ,  nclin
-  if ( ub(i + n) - lb(i + n) .lt. pivthr ) then
+  if ( ub(i + n) - lb(i + n) < pivthr ) then
     m = m + 1
     call dcopy(n, a( i ), lda, wrk(lmat + m), ldmat) 
   endif
@@ -2068,7 +2068,7 @@ do 30 i=1 ,  nclin
 !
 
 do 40 i=1, ncnln
-  if ( ub(i + n + nclin)-lb(i + n + nclin) .lt. pivthr ) then
+  if ( ub(i + n + nclin)-lb(i + n + nclin) < pivthr ) then
     m = m + 1
     call dcopy( n, wrk(lcjac + i), ldcj, wrk(lmat + m), ldmat )
   endif
@@ -2084,8 +2084,8 @@ call izrvec( iwrk, n )
 !  TAKE CARE OF IT BETTER.
 !
 
-if ( m .gt. n ) then
-  if ( iprint .ge. 0 ) write( iout, 1200 ) m, n
+if ( m > n ) then
+  if ( iprint >= 0 ) write( iout, 1200 ) m, n
   stop
 endif
 !
@@ -2100,7 +2100,7 @@ call dgeqpf( m, n, wrk(imat), ldmat, iwrk, wrk(icurw), &
 !
 neqcon = m
 do 50 i = m, 1, -1
-  if ( abs(wrk( lmat + (i-1)*ldmat + i )) .lt. 100*mcheps ) &
+  if ( abs(wrk( lmat + (i-1)*ldmat + i )) < 100*mcheps ) &
        neqcon = neqcon - 1
 50 continue
 

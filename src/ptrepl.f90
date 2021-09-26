@@ -73,10 +73,10 @@
 !
 !  CHECK TO WHICH BLOCK WE ARE ADDING THE POINT, CLEARLY NIND<DD
 !
- if ( ipoly .le. np1 ) then
+ if ( ipoly <= np1 ) then
    block=1
-   if ( nind .gt. np1 ) then
-     if ( iprint .gt. 0 ) write(iout,1000) ipoly
+   if ( nind > np1 ) then
+     if ( iprint > 0 ) write(iout,1000) ipoly
      stop 
    endif
  else
@@ -85,7 +85,7 @@
 !
 !  IF WE ONLY DEAL WITH THE LINEAR BLOCK (NO QUADRATIC POLYNOMIALS YET)
 !
- if (block.eq.1) then
+ if (block==1) then
 
 ! 
 !  "NORMALIZE" THE IPOLY-TH  POLYNOMIAL
@@ -101,7 +101,7 @@
 !  WITH RESPECT TO THE PREVIOUS POLYNOMIALS
 ! 
 
-   if ( abs(vnew) .lt. 1.0d2 ) then
+   if ( abs(vnew) < 1.0d2 ) then
      call nextnp(ipoly, poly, pntint, nind, n, lpoly, lptint)
      call evalx(val, xnew, poly, ipoly, n, lpoly)  
      do 20 i = npbeg, npend
@@ -114,7 +114,7 @@
 !  ZERO AT  THE POINT XNEW 
 !
    do 40 j=2, nind
-     if ( j .ne. ipoly ) then 
+     if ( j /= ipoly ) then 
        call evalx( val, xnew, poly, j, n, lpoly )
        do 30 i = npbeg, npend
          k = i - npbeg + (j-2)*np1 + 2
@@ -144,7 +144,7 @@
 !  WITH RESPECT TO THE PREVIOUS POLYNOMIALS
 ! 
 
-   if ( abs(vnew) .lt. 1.0d2 ) then
+   if ( abs(vnew) < 1.0d2 ) then
      call nextnp(ipoly, poly, pntint, nind, n, lpoly, lptint)
      call evalx(val, xnew, poly, ipoly, n, lpoly)  
      do 60 i = npbeg, npend
@@ -157,7 +157,7 @@
 !  ZERO AT  THE POINT XNEW  
 !
    do 80 j=n+2,nind
-     if ( j .ne. ipoly ) then
+     if ( j /= ipoly ) then
        call evalx(val, xnew, poly, j, n,  lpoly)
        do 70 i = npbeg, npend
          k = i - npbeg + (j-n-2)*dd + n*(n+1) + 2

@@ -168,7 +168,7 @@ ixgnew = 1
 !
 icurw  = ixgnew + n
 lenw   = lwrk - icurw + 1
-if ( lenw .lt. 0 ) then
+if ( lenw < 0 ) then
   write( iout, 1000 ) - lenw 
   stop
 endif
@@ -188,7 +188,7 @@ minmax= 0
 !  DIRECTLY TO THE NBUILD PROCEDURE
 !
 
-if ( impr .eq. 10 ) goto 25
+if ( impr == 10 ) goto 25
 
 !
 !  IF THE MODEL IS NOT TOO OLD AND IMPR IS >= -1, THEN WE FIRST TRY TO 
@@ -201,9 +201,9 @@ if ( impr .eq. 10 ) goto 25
 !  NEED TO INCLUDE ANOTHER  POINT, EVEN IF THE MODEL IS "OLD".
 !
 
-10 if ( ( dist(in2sp(1)) .le. layer*delta .or. nind .le. npmin  ) &
-      .and. impr .ge. -1 ) then
-  if ( iprint .ge. 2 ) write( iout, 8000 )
+10 if ( ( dist(in2sp(1)) <= layer*delta .or. nind <= npmin  ) &
+      .and. impr >= -1 ) then
+  if ( iprint >= 2 ) write( iout, 8000 )
   call ptnew( wrk(ixgnew), ixg  , vnew , pntint, lptint, n     , &
               poly ,lpoly, nind , base , del   , lb    , ub    , &      ! 
               a    , lda , nclin, ncnln, pivval, pivthr, xchthr, &
@@ -215,7 +215,7 @@ if ( impr .eq. 10 ) goto 25
 !  WE RETURN AND STOP OPTIMIZATION, OTHERWISE WE MAY GO INTO
 !  LOOP
 !      
-  if ( fail .and. nind .lt. n + 1 - neqcon ) then
+  if ( fail .and. nind < n + 1 - neqcon ) then
     impr = 0
     goto 25
   endif
@@ -232,15 +232,15 @@ endif
 !  RADIUS.
 !
 
-if ( fail .and. iferr .and. minmax .eq. 0 ) then
-  if ( jpoly .lt. n+1 ) then
+if ( fail .and. iferr .and. minmax == 0 ) then
+  if ( jpoly < n+1 ) then
 !
 !  IF WE STILL HAVE NOT TRIED ALL POLYNOMIALS  IN THE LINEAR BLOCK, 
 !  PICK THE NEXT POLYNOMIAL, PUT IT IN APPROPRIATE PLACE  AND GO BACK TO 'PTNEW'
 !
     jpoly = jpoly+1
     call swapnp( n, jpoly, nind+1, poly, lpoly )
-    if ( iprint .ge. 2 ) write( iout, 8020 ) jpoly
+    if ( iprint >= 2 ) write( iout, 8020 ) jpoly
     minmax = 0
     goto 10
   else
@@ -249,7 +249,7 @@ if ( fail .and. iferr .and. minmax .eq. 0 ) then
 !  BY HALF AND REPEAT
 !
     del   = del/2.0d0
-    if ( del .gt. delmin ) then
+    if ( del > delmin ) then
       jpoly = nind + 1
       minmax = 0
       goto 10
@@ -276,20 +276,20 @@ if ( .not. fail ) then
 !
   fail = .true.
   nf = nf + 1
-  if ( nf .gt. maxnf ) return
+  if ( nf > maxnf ) return
   call unshft(n, x, wrk(ixgnew))
-  if ( scale .ne. 0 ) call unscl( n, wrk(ixgnew), scal )
+  if ( scale /= 0 ) call unscl( n, wrk(ixgnew), scal )
   call fun( n, m, wrk(ixgnew), obfval(nq+1), conval(nq*m+1), &
             iferr)
-  if ( scale .ne. 0 ) call scl( n, wrk(ixgnew), scal )
+  if ( scale /= 0 ) call scl( n, wrk(ixgnew), scal )
   call shift(n, x, wrk(ixgnew))
   if (iferr) then
-    if ( iprint .ge. 2 ) write( iout, 8010 )
+    if ( iprint >= 2 ) write( iout, 8010 )
 !
 !  IF FUNCTION VALUE COULD NOT BE COMPUTED AT THE NEW GEOMETRY POINT
 !  WE TRY TO FIND ANOTHER POINT
 !
-    if ( nind .lt. n + 1 - neqcon ) then
+    if ( nind < n + 1 - neqcon ) then
 !
 !  IF WE DO NOT HAVE A FULLY LINEAR MODEL, THEN WE DO A BIT MORE WORK
 !  TO GET A GEOMETRY POINT: 
@@ -301,17 +301,17 @@ if ( .not. fail ) then
 !     MINMAX = 0 INDICATES THAT BOTH MINIMIZER AND MAXIMIZER WERE TRIED
 !     SO THE SEARCH SHOULD BE REPEATED FOR A DIFFERENT POLYNOMIAL
 
-      if ( minmax .ne. 0 ) then
+      if ( minmax /= 0 ) then
         minmax = - minmax
         goto 10
-      else if ( jpoly .lt. n + 1 - neqcon ) then
+      else if ( jpoly < n + 1 - neqcon ) then
 !
 !  IF WE STILL HAVE NOT TRIED ALL POLYNOMIALS  IN THE LINEAR BLOCK, 
 !  PICK THE NEXT POLYNOMIAL, PUT IT IN APPROPRIATE PLACE  AND GO BACK TO 'PTNEW'
 !
         jpoly = jpoly+1
         call swapnp( n, jpoly, nind+1, poly, lpoly )
-        if ( iprint .ge. 2 ) write( iout, 8020 ) jpoly
+        if ( iprint >= 2 ) write( iout, 8020 ) jpoly
         minmax = 0
         goto 10
       else
@@ -323,7 +323,7 @@ if ( .not. fail ) then
 !  BY HALF AND REPEAT
 !
 !              DEL   = DEL/2.0D0
-!              IF ( DEL .GT. DELMIN ) THEN
+!              IF ( DEL > DELMIN ) THEN
 !                JPOLY = NIND + 1
 !                MINMAX = 0
 !                GOTO 10
@@ -331,7 +331,7 @@ if ( .not. fail ) then
 !                GOTO 25
 !              ENDIF
 !            ENDIF
-!          ELSE IF ( NIND .LT. DD ) THEN
+!          ELSE IF ( NIND < DD ) THEN
     else
       impr = 4
       goto 25
@@ -340,7 +340,7 @@ if ( .not. fail ) then
 !  BY HALF AND REPEAT
 !
 !              DEL    = DEL/2.0D0
-!              IF ( DEL .GT. DELMIN ) THEN
+!              IF ( DEL > DELMIN ) THEN
 !                JPOLY = NIND + 1
 !                MINMAX = 0
 !                GOTO 10
@@ -355,7 +355,7 @@ if ( .not. fail ) then
 !            CALL GETDIS( N, NQ+1, NQ+1, POINTS, IN2SP(BASE), DIST, 
 !     +                   WRK(ICURW), LENW )
 !            DEL         = DIST( NQ+1 )/2.0D0
-!            IF ( IPRINT .GE. 2 ) WRITE( IOUT, 8030 )
+!            IF ( IPRINT >= 2 ) WRITE( IOUT, 8030 )
 !            GOTO 10
     endif
   endif
@@ -382,22 +382,22 @@ if ( .not. fail ) then
 !                       IXG<NIND   - THE NEW POINT IS REPLACING 
 !                                    INTERPOLATION POINT WITH INDEX IXG. 
 !
-  if ( ixg .eq. nind+1 ) then
+  if ( ixg == nind+1 ) then
     impr        = 1
   else
     impr        = 2
   endif
-  if  ( effort.le.1 .or. &
-      ( effort.le.2 .and. ixg.eq.nind+1)) then
+  if  ( effort<=1 .or. &
+      ( effort<=2 .and. ixg==nind+1)) then
 
     call ptrepl( wrk(ixgnew), ixg   , vnew, pntint, poly, nind, n, &    ! 
                  lpoly      , lptint)
-    if ( iprint .ge. 2 ) write( iout, 8040 ) ixg, vnew
+    if ( iprint >= 2 ) write( iout, 8040 ) ixg, vnew
 !
 !  DO  BOOKKEEPING RELATED WITH ADDING "XGNEW" TO THE INTERP. SET
 !
     fail = .false.
-    if ( impr .eq. 1 ) then
+    if ( impr == 1 ) then
       pivval(ixg) = vnew
       nind        = nind+1
     else
@@ -417,15 +417,15 @@ endif
 !  FROM SCRATCH. 
 !
 25 if ( fail ) then
-  if ( impr .eq. 0 ) goto 28
+  if ( impr == 0 ) goto 28
 !
 !  IF THE POINT FROM TRUST REGION MINIMIZATION HAS A GOOD VALUE, BUT
 !  WAS NOT ADDED TO INTERPOLATION YET, THEN COPY IT AS SECOND POINT IN
 !  INTERPOLATION SET (NOT THE FIRST, SINCE WE WANT TO INDICATE THAT
 !  THE BASE HAD CHANGED) AND SET BASE=2 (-IMPR IS THE INDEX OF THE POINT) 
 !
-  if ( impr .lt. 0 ) then
-    if ( iprint .ge. 2 ) write( iout, 8050 )
+  if ( impr < 0 ) then
+    if ( iprint >= 2 ) write( iout, 8050 )
     call dcopy(n, points((-impr-1)*n+1), 1, pntint(n+1), 1)
     base     = 2
     in2sp(2) = -impr
@@ -435,10 +435,10 @@ endif
 !
 !  SET APPROPRIATE VALUE FOR IMPR
 !
-  if (dist(in2sp(1)).gt. layer*delta ) then
-    if ( iprint .ge. 2 ) write( iout, 8060 ) dist(in2sp(1))
+  if (dist(in2sp(1))> layer*delta ) then
+    if ( iprint >= 2 ) write( iout, 8060 ) dist(in2sp(1))
     impr = 3
-  elseif ( impr .ne. 10 .and. impr .ne. 1 .and. impr .ne. 2 ) then
+  elseif ( impr /= 10 .and. impr /= 1 .and. impr /= 2 ) then
     impr = 4
   endif
 
@@ -446,17 +446,17 @@ endif
 !  SHIFT THE CURRENT BASE TO THE ORIGIN (BASE=1 MEANS IT IS AT THE
 !                                        ORIGIN ALREADY)
 !
-28   if ( base .ne. 1 ) then
+28   if ( base /= 1 ) then
     call unshft(n, pntint((base-1)*n+1), x)
     do 30 j=1, nq
       call shift(n, pntint((base-1)*n+1), points((j-1)*n+1))
 30     continue
   endif
-  if ( iprint .ge. 2 ) write( iout, 8070 )
+  if ( iprint >= 2 ) write( iout, 8070 )
   call nbuild( poly  , points, values, pntint, valint, sp2in, &
                in2sp , nind  , n     , base  , dist  , delta, &
                pivthr, pivval, neqcon)
-  if (( impr .eq. 1 .or. impr .eq. 2 ) .and. ( sp2in(nq) .eq. 0 )) &
+  if (( impr == 1 .or. impr == 2 ) .and. ( sp2in(nq) == 0 )) &
         impr = 0
 endif 
 
@@ -563,8 +563,8 @@ external         dnrmnf
 !  CHECK SUFFICIENCY OF THE REAL WORKSPACE
 !
 
-if ( lwrk .lt. n ) then
-   if( iprint .ge. 0 ) write( iout, 1000 ) n
+if ( lwrk < n ) then
+   if( iprint >= 0 ) write( iout, 1000 ) n
    stop
 endif
 
@@ -572,8 +572,8 @@ endif
 !
 !  CHECK IF THE IDX HAS A LEA GAL VALUE
 !
-if ( idx.lt.0 .or. idx.gt.nq ) then
-   if( iprint .ge. 0 ) write( iout, 1010 ) idx
+if ( idx<0 .or. idx>nq ) then
+   if( iprint >= 0 ) write( iout, 1010 ) idx
    stop 
 endif
 
@@ -582,9 +582,9 @@ endif
 !
 lb = ( base - 1 ) * n 
 
-if ( idx .eq. 0 ) then
+if ( idx == 0 ) then
   do 20 i = 1, nq
-    if ( i .eq. base ) then
+    if ( i == base ) then
       dist( i ) = zero
     else
       li = ( i - 1 ) * n 
@@ -602,7 +602,7 @@ if ( idx .eq. 0 ) then
 !  IF IDX>0 COMPUTE DISTANCE ONLY TO THAT POINT
 !
 else 
-  if ( idx .eq. base ) then
+  if ( idx == base ) then
     dist( idx ) = zero
   else
     li = ( idx - 1 ) * n
@@ -752,7 +752,7 @@ intrinsic        abs
 
 val=0.0d0
 do 10 j = 1, n
-  if ( abs( x( j ) ).gt.val) val=abs( x( j ) )
+  if ( abs( x( j ) )>val) val=abs( x( j ) )
 10 continue
 dnrmnf=val
 return

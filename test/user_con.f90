@@ -16,20 +16,20 @@ save /test/
 !  CAN BE A DUMMY ROUTINE. IF CONSTRAINTS ARE PRESENT SHOULD COMPUTE
 !  THE VALUES OF THE CONSTRAINTS AT POINT X AND STORE IT IN C
 !
-if ( ntest .eq. 11 ) then
-  if ( ncnln .gt. 0 ) then
+if ( ntest == 11 ) then
+  if ( ncnln > 0 ) then
     do 50 i=1, ncnln
-        if(i.eq.1) then
+        if(i==1) then
           c(1)=exp(x(1))+2*exp(x(2))+2*exp(x(3))+exp(x(6))+ &
                exp(x(10))
         endif
-        if(i.eq.2) then
+        if(i==2) then
           c(2)=exp(x(4))+2*exp(x(5))+exp(x(6))+exp(x(7))
         endif
 50     continue
   endif
-elseif (ntest .eq. 12 ) then
-  if ( ncnln .gt. 0 ) then
+elseif (ntest == 12 ) then
+  if ( ncnln > 0 ) then
           c(1)=-3*(x(1)-2)**2-4*(x(2)-3)**2-2*x(3)**2+ &
                 7*x(4)+120
           c(2)=-5*x(1)**2-8*x(2) &
@@ -54,25 +54,25 @@ integer           i, j
 !  THE JACOBIAN OF THE CONSTRAINTS AT POINT X AND STORE IT IN CJAC
 !  SO THAT THE FIST ROW IS THE GRADIENT OF THE FIRST CONSTRAINT
 !
-if ( ntest .eq. 11 ) then
+if ( ntest == 11 ) then
   do 50 i=1, ncnln
         do 55 j = 1, n
           cjac(i, j) = 0.0d0
 55         continue  
-        if(i.eq.1) then
+        if(i==1) then
           cjac(1,1)=exp(x(1))
           cjac(1,2)=2*exp(x(2))    
           cjac(1,3)=2*exp(x(3))
           cjac(1,6)=exp(x(6))
           cjac(1,10)=exp(x(10))    
         endif
-        if(i.eq.2) then
+        if(i==2) then
           cjac(2,4)=exp(x(4))
           cjac(2,5)=2*exp(x(5))  
           cjac(2,6)=exp(x(6))
           cjac(2,7)=exp(x(7))   
         endif
-        if(i.eq.3) then
+        if(i==3) then
           cjac(3,3)=exp(x(3))
           cjac(3,7)=exp(x(7))  
           cjac(3,8)=exp(x(8))
@@ -80,8 +80,8 @@ if ( ntest .eq. 11 ) then
           cjac(3,10)=exp(x(10)) 
         endif
 50   continue
-elseif (ntest .eq. 12 ) then
-  if ( ncnln .gt. 0 ) then
+elseif (ntest == 12 ) then
+  if ( ncnln > 0 ) then
    do 65 j = 1, n
      cjac(1, j) = 0.0d0
 65    continue  
@@ -116,26 +116,26 @@ integer           i, j
 !  EXISTING CHESS WITH COEFFICIENT LAMBDA 
 !      CHESS=CHESS+LAMBDA*HESS(C_K(X))
 
-if ( ntest .eq. 11 ) then
-  if ( k.eq. 1) then 
+if ( ntest == 11 ) then
+  if ( k== 1) then 
     chess(1,1)=chess(1,1)+exp(x(1))*lambda
     chess(2,2)=chess(2,2)+2*exp(x(2))*lambda
     chess(3,3)=chess(3,3)+exp(x(3))*(2*lambda)
     chess(6,6)=chess(6,6)+exp(x(6))*(lambda)
     chess(10,10)=chess(10,10)+exp(x(10))*(lambda)  
-  else if ( k.eq. 2) then   
+  else if ( k== 2) then   
     chess(4,4)=chess(4,4)+exp(x(4))*lambda
     chess(5,5)=chess(5,5)+2*exp(x(5))*lambda
     chess(6,6)=chess(6,6)+exp(x(6))*lambda
     chess(7,7)=chess(7,7)+exp(x(7))*(lambda)
   endif
-elseif (ntest .eq. 12 ) then
-  if ( ncnln .gt. 0 ) then
-   if ( k .eq. 1 ) then
+elseif (ntest == 12 ) then
+  if ( ncnln > 0 ) then
+   if ( k == 1 ) then
     chess(1,1)=chess(1,1)-lambda*6d0
     chess(2,2)=chess(2,2)-lambda*8d0
     chess(3,3)=chess(3,3)-lambda*4d0
-   elseif ( k.eq. 2) then 
+   elseif ( k== 2) then 
     chess(1,1)=chess(1,1)-lambda*10d0
     chess(3,3)=chess(3,3)-lambda*2d0
   endif 

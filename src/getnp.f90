@@ -40,9 +40,9 @@ do 10 i=1,n
 10 continue
 
  
-if (ipoly.eq.1) then
+if (ipoly==1) then
   kappa=poly(1)
-elseif (ipoly .le. np1) then
+elseif (ipoly <= np1) then
   kbeg=2+(ipoly-2)*(np1)
   kappa=poly(kbeg)
   do 30 i=1, n

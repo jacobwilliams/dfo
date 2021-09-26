@@ -324,36 +324,36 @@ noise( 2 )   = rnoise
 !
 !  CHECK IF THE DIMENSIONS ARE POSITIVE
 !
-if ( n .le. 0 .or. n .gt. nvarmx ) then
-   if (iprint .ge. 0 ) write( iout, 1000 ) n
+if ( n <= 0 .or. n > nvarmx ) then
+   if (iprint >= 0 ) write( iout, 1000 ) n
    info = -1
    return
 endif
 
-if ( m .lt. 0 .or. m .gt. nconmx ) then
-   if (iprint .ge. 0 ) write( iout, 1005 ) m
+if ( m < 0 .or. m > nconmx ) then
+   if (iprint >= 0 ) write( iout, 1005 ) m
    info = -1
    return
 endif
 
-if ( nclin .lt. 0  .or. nclin .gt. nlinmx) then
-   if (iprint .ge. 0 ) write( iout, 1010 ) nclin
+if ( nclin < 0  .or. nclin > nlinmx) then
+   if (iprint >= 0 ) write( iout, 1010 ) nclin
    info = -1
    return
 endif
 
-if (  ncnln .lt. 0 .or. ncnln .gt. nnlnmx) then
-   if (iprint .ge. 0 ) write( iout, 1020 ) ncnln
+if (  ncnln < 0 .or. ncnln > nnlnmx) then
+   if (iprint >= 0 ) write( iout, 1020 ) ncnln
    info = -1
    return
 endif
-if ( maxnf .gt. nfunmx-nx ) then
-   if (iprint .ge. 0 ) write( iout, 1110 ) nfunmx
+if ( maxnf > nfunmx-nx ) then
+   if (iprint >= 0 ) write( iout, 1110 ) nfunmx
    info = -8
    return
 endif
-if ( maxnf .le. 0 ) then 
-   if (iprint .ge. 0 ) write( iout, 1050 ) 2
+if ( maxnf <= 0 ) then 
+   if (iprint >= 0 ) write( iout, 1050 ) 2
    info=-8
    return
 endif
@@ -362,10 +362,10 @@ endif
 !
 badbnd=0
 do 10 i=1,n+nclin+ncnln+m
-  if (lb( i ) .gt. ub( i )+mcheps) badbnd=1
+  if (lb( i ) > ub( i )+mcheps) badbnd=1
 10 continue
-if (badbnd.eq.1) then
-  if (iprint .ge. 0 ) write(iout, 1030)
+if (badbnd==1) then
+  if (iprint >= 0 ) write(iout, 1030)
   info=-5
   return
 endif
@@ -376,8 +376,8 @@ endif
 !  CHECK IF DIMENSION OF LINEAR CONSTRAINT MATRIX IS SATISFACTORY
 !
 
-if ( lda .lt. max(nclin,1) ) then 
-   if (iprint .ge. 0 ) write(iout, 1060) max(nclin,1)
+if ( lda < max(nclin,1) ) then 
+   if (iprint >= 0 ) write(iout, 1060) max(nclin,1)
    info = -2              
    return
 endif
@@ -386,8 +386,8 @@ endif
 !  CHECK IF LEADING DIMENSION OF INITIAL SET 'X' IS SATISFACTORY
 !
 
-if ( ldx .lt. n ) then 
-   if (iprint .ge. 0 ) write(iout, 1080) n
+if ( ldx < n ) then 
+   if (iprint >= 0 ) write(iout, 1080) n
    info = -2              
    return
 endif
@@ -396,17 +396,17 @@ endif
 !  CHECK IF OTHER DIMENSION OF INITIAL SET 'X' IS POSITIVE
 !
 
-if ( nx .le. 0 ) then 
-   if (iprint .ge. 0 ) write(iout, 1090) 
+if ( nx <= 0 ) then 
+   if (iprint >= 0 ) write(iout, 1090) 
    info = -2              
    return
 endif
 !
 !  CHECK IF OTHER INPUT PARAMETERS ARE VALID
 !
-if ( stpcrtr .gt. 2 .or. stpcrtr .lt. 1 .or. delmin.lt. 0 .or. &
-     stpthr .lt. 0 .or. cnstolp .lt. 0 .or. delta .lt. 0 ) then
-   if (iprint .ge. 0 ) write(iout, 1100) 
+if ( stpcrtr > 2 .or. stpcrtr < 1 .or. delmin< 0 .or. &
+     stpthr < 0 .or. cnstolp < 0 .or. delta < 0 ) then
+   if (iprint >= 0 ) write(iout, 1100) 
    info = -1           
    return
 endif
@@ -416,8 +416,8 @@ endif
 !
 
 
-if ( iprint .ge. 2 ) then
-  if ( varnt .eq.1 ) then
+if ( iprint >= 2 ) then
+  if ( varnt ==1 ) then
     write ( iout, 4000 )
   else
     write ( iout, 4020 )
@@ -456,7 +456,7 @@ id  = ic + max(1,( maxnf + nx )*m)
 !
 icurw = id + ( maxnf + nx )
 lenw  = lwrk - icurw + 1
-if ( lenw .lt. 0 ) then
+if ( lenw < 0 ) then
   write( iout, 1070 ) lwrk
   info = -3
   return
@@ -471,7 +471,7 @@ nf = 0
 if ( .not. ifiniv ) then
   call fun( n, m, x, wrk(iob), wrk(ic), iferr )
   if ( iferr ) then
-    if (iprint .ge. 0 ) write(iout, 1040)
+    if (iprint >= 0 ) write(iout, 1040)
     info = -6
     return
   endif
@@ -484,8 +484,8 @@ endif
 !  CHECK IF THE INITIAL NUMBER OF INTERPOLATION POINTS
 !  IS NOT LARGER THAN MAXIMUM NUMBER OF FUNCTION EVALUATIONS
 !  
-if ( nf .ge. maxnf ) then 
-   if (iprint .ge. 0 ) write( iout, 1120 )
+if ( nf >= maxnf ) then 
+   if (iprint >= 0 ) write( iout, 1120 )
    info=1
    it=1
    scale =0
@@ -506,8 +506,8 @@ endif
 !  CHECK IF SCALING AND 'EASY' NONLINEAR CONSTRAINTS ARE NOT USED AT
 !  THE SAME TIME (NOT SUPPORTED BY CURRENT VERSION)
 !
-if ( scale .ne. 0 .and. ncnln .gt. 0 ) then
-   if (iprint .ge. 0 ) write(iout, 5000) 
+if ( scale /= 0 .and. ncnln > 0 ) then
+   if (iprint >= 0 ) write(iout, 5000) 
    scale = 0
 endif
 
@@ -515,17 +515,17 @@ endif
 !  SCALE THE PROBLEM IF REQUIRED
 !
 
-if ( scale .ne. 0 ) then
+if ( scale /= 0 ) then
   avgsc=one
   do 20 i=1, n
-    if ( scale .eq. 1 ) then
+    if ( scale == 1 ) then
       wrk( lscal + i ) = one + abs(x(i))
       avgsc   = avgsc * wrk( lscal + i )
     else 
       wrk( lscal + i ) = ub(i) - lb(i)
-      if ( wrk( lscal + i) .lt. cnstol .or. ub(i) .ge. 1.0d+20 &
-                           .or. lb(i)  .le. -1.0d+20 ) then
-        if (iprint .ge. 0 ) write( iout, 5200 )  i
+      if ( wrk( lscal + i) < cnstol .or. ub(i) >= 1.0d+20 &
+                           .or. lb(i)  <= -1.0d+20 ) then
+        if (iprint >= 0 ) write( iout, 5200 )  i
         wrk( lscal + i ) = one
         avgsc   = avgsc * wrk( lscal + i )
       endif
@@ -536,7 +536,7 @@ endif
 !
 !  SCALE THE POINT AND THE BOUNDS
 !
-if ( scale .ne. 0 ) then
+if ( scale /= 0 ) then
   do 25 i=1,nx
     call scl( n, x((i-1)*n+1), wrk( iscal ) )
 25   continue  
@@ -554,7 +554,7 @@ if ( scale .ne. 0 ) then
       a(lda*(i-1)+j)=a(lda*(i-1)+j)*wrk( lscal + i )
 30     continue  
 40   continue  
-  if ( iprint .ge. 2 ) then
+  if ( iprint >= 2 ) then
     write( iout, 8000 )
     do 45 i = 1, n
       write( iout, 8010 ) wrk( lscal + i )
@@ -587,8 +587,8 @@ call ptinit(n         , m      , x      , ldx     , nx     , &
 !  IF A SECOND POINT FOR WHICH FUNCTION VALUE  CAN BE COMPUTED
 !  CANNOT BE FOUND, THEN PRINT A MESSAGE AND STOP
 !
-if ( inform .eq. -1 ) then
-  if ( iprint .ge. 0 ) write(iout, 2030)
+if ( inform == -1 ) then
+  if ( iprint >= 0 ) write(iout, 2030)
   info = -9
   goto 48
 endif
@@ -598,8 +598,8 @@ endif
 !  PRINT A MESSAGE AND STOP
 !
 
-if ( inform .eq. 1 ) then
-  if ( iprint .ge. 0 ) write(iout, 2040)
+if ( inform == 1 ) then
+  if ( iprint >= 0 ) write(iout, 2040)
   info = -7
   return
 endif
@@ -610,8 +610,8 @@ endif
 !  TO INITIATE THE PROCESS WE STOP AND PRINT A MESSAGE      
 !
 
-if ( inform .eq. 2 ) then
-  if ( iprint .ge. 0 ) write(iout, 2050)
+if ( inform == 2 ) then
+  if ( iprint >= 0 ) write(iout, 2050)
   info = -9
   return
 endif
@@ -639,8 +639,8 @@ do 47 mjit=1, nmjit
 !
 !  CHECK IF WE RAN OUT OF CUNTION EVALUATIONS
 ! 
-if ( inform .eq. -2 ) then
-  if ( iprint .ge. 0 ) write(iout, 1120)
+if ( inform == -2 ) then
+  if ( iprint >= 0 ) write(iout, 1120)
   info = 2
   call bestpt( n, m, x, fx, c, wrk(ip), wrk(iv), wrk(iob), &
              wrk(ic), nq )
@@ -653,8 +653,8 @@ endif
                it , nf , noise, ipar      , rpar  , icurw, &
                wrk(ip) , lwrk-ip+1 , iwrk , liwrk )
 
-  if ( nf .ge. maxnf ) go to 48
-  if ( it .ge. maxit ) go to 48
+  if ( nf >= maxnf ) go to 48
+  if ( it >= maxit ) go to 48
   pp = pp * 1.0d1
 
 47 continue  
@@ -664,7 +664,7 @@ endif
 
 48 continue
 
-if (scale .ne. 0) then
+if (scale /= 0) then
   call unscl( n, x, wrk(iscal) )
   call unscl( n, lb, wrk(iscal) )
   call unscl( n, ub, wrk(iscal) )
@@ -678,7 +678,7 @@ endif
 !
 !  IF DEMANDED, PRINT OUT THE FINAL OUTPUT
 !
-if ( iprint .ge. 0 ) then
+if ( iprint >= 0 ) then
   write ( iout, 6000 ) pname
   do 70 i = 1, n
     write( iout, 6200 ) xnames(i), x( i )

@@ -62,7 +62,7 @@ subroutine fd( lafla , pntint, values, poly, n,  q, neqcon, &
 !  CARDINALITY OF ALFA_{I-1}
 !
 
-   if (i.eq.2) then
+   if (i==2) then
 !          
 !  ALL FINITE DIFFERENCES CORRESPONDING TO DEGREES >= 1 ARE UPDATED.
 !  THE NEWTON FUNDAMENTAL POLYNOMIALS OF DEGREE CARDINALITY OF ALFA_I = 0
@@ -81,7 +81,7 @@ subroutine fd( lafla , pntint, values, poly, n,  q, neqcon, &
 115     continue
 
    else
-     if (i.eq.np2) then
+     if (i==np2) then
 !
 !  ALL FINITE DIFFERENCES CORRESPONDING TO DEGREES = 2 ARE UPDATED.
 !  THE NEWTON FUNDAMENTAL POLYNOMIALS OF DEGREE CARDINALITY OF ALFA_I = 1

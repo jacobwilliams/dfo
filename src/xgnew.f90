@@ -138,8 +138,8 @@ lenw   = lwrk-icurw+1
 !
 !  CHECK IF REAL SPACE IS SUFFICIENT
 !
-if ( lenw .lt. 1 ) then
-  if ( iprint .ge. 0 ) write (iout, 1000) - lenw + 1
+if ( lenw < 1 ) then
+  if ( iprint >= 0 ) write (iout, 1000) - lenw + 1
   stop
 endif
 
@@ -159,7 +159,7 @@ vmax = zero
 !  (NIND+1ST) POLYNOMIAL, UPDATED SO, THAT IS IS ZERO AT ALL  
 !  POINT IN THE SET. 
 
-if ( nind .lt. dd ) then
+if ( nind < dd ) then
 
 !
 !  UPDATE THE 'NEXT POLYNOMIAL, SO THAT IT IS ZERO AT ALL POINTS
@@ -173,7 +173,7 @@ if ( nind .lt. dd ) then
     
   call getnp(nind+1, poly, lpoly, n, kappa, wrk(ig),wrk(ih))
 
-  if ( minmax .ne. 1 ) then
+  if ( minmax /= 1 ) then
 !
 !  SET PARAMETERS FOR TRUST-REGION MINIMIZATION
 !
@@ -201,7 +201,7 @@ if ( nind .lt. dd ) then
 !
 !  STORE THE VALUE AND THE POINT
 !
-    if ( info .eq. 0 ) then
+    if ( info == 0 ) then
       vnew = mval + kmod
       vmax = abs(vnew)
       call dcopy(n, wrk(ixbase), 1, xgnew, 1)
@@ -212,7 +212,7 @@ if ( nind .lt. dd ) then
 !  WITH NEGATIVE SIGN)
 !
 
-  if ( minmax .ne. -1 ) then
+  if ( minmax /= -1 ) then
     kmod = -kappa
     do 40 i=1,n
       gmod(i)= -wrk(ig+i-1)
@@ -245,8 +245,8 @@ if ( nind .lt. dd ) then
 
 
 
-  if ( minmax .eq. 0 ) then
-    if ( abs(mval+kmod) .gt. vmax .and. info .eq. 0 ) then
+  if ( minmax == 0 ) then
+    if ( abs(mval+kmod) > vmax .and. info == 0 ) then
       vnew   = - mval - kmod
       minmax = 1
       vmax   = abs(vnew)
@@ -256,7 +256,7 @@ if ( nind .lt. dd ) then
     endif
   else
     minmax = 0
-    if (  abs(mval+kmod) .gt. vmax .and. info .eq. 0 ) then
+    if (  abs(mval+kmod) > vmax .and. info == 0 ) then
       vnew   = - mval - kmod
       vmax   = abs(vnew)
       call dcopy(n, wrk(ixbase), 1, xgnew, 1)
@@ -266,11 +266,11 @@ if ( nind .lt. dd ) then
 !  IF THE PIVOT VALUE IS ACCEPTABLE, THEN WE ARE DONE
 !
 
-  if (vmax.gt.pivthr) then
+  if (vmax>pivthr) then
     fail  = .false.
     ipoly =  nind+1
     info  =  0
-    if ( iprint .ge. 3 ) write(iout,8000) ipoly, vmax
+    if ( iprint >= 3 ) write(iout,8000) ipoly, vmax
   endif
 endif
 
@@ -288,7 +288,7 @@ if (fail) then
   pivmin=one - cnstol*delta
   minpiv=0 
   do 45 i=1,nind
-    if (abs(pivval(i)).lt.abs(pivmin)) then
+    if (abs(pivval(i))<abs(pivmin)) then
       pivmin=abs(pivval(i))
       minpiv=i
     endif
@@ -302,8 +302,8 @@ if (fail) then
 
 
 
-  if ( minpiv.gt.0   .and. minpiv.ne.base .and. &
-     ( minpiv.gt.np1 .or.  nind.le.np1)       ) then
+  if ( minpiv>0   .and. minpiv/=base .and. &
+     ( minpiv>np1 .or.  nind<=np1)       ) then
 
     ipoly=minpiv
       
@@ -337,7 +337,7 @@ if (fail) then
                 wrk( icurw )     , lenw, iwrk , liwrk, info, 1 )
     call shift( n, x0, wrk(ixbase) )
 
-    if ( info .eq. 0 ) then
+    if ( info == 0 ) then
       vnew = mval + kmod  
       vmax = abs(vnew)
       call dcopy( n, wrk(ixbase), 1, xgnew, 1 )
@@ -371,7 +371,7 @@ if (fail) then
 !
 !  CHOOSE THE BETTER POINT BETWEEN MAXIMIZER AND MINIMIZER
 !
-    if ( abs( mval+kmod ) .gt. vmax .and. info .eq. 0) then
+    if ( abs( mval+kmod ) > vmax .and. info == 0) then
       vnew = - mval - kmod  
       vmax = abs(vnew)
       call dcopy( n, wrk(ixbase), 1, xgnew, 1)
@@ -384,15 +384,15 @@ if (fail) then
 !  FAIL=FALSE
 !
     
-    if ( vmax.gt.xchthr ) then
+    if ( vmax>xchthr ) then
       fail =.false.
       info = 0
-      if ( iprint .ge. 3 ) write(iout,8020) ipoly, pivmin, vmax 
+      if ( iprint >= 3 ) write(iout,8020) ipoly, pivmin, vmax 
     else 
-      if ( iprint .ge. 3 ) write(iout,8030) ipoly, pivmin, vmax
+      if ( iprint >= 3 ) write(iout,8030) ipoly, pivmin, vmax
     endif
   else
-    if ( iprint .ge. 3 ) write(iout,8010) 
+    if ( iprint >= 3 ) write(iout,8010) 
   endif
 endif
 return

@@ -19,15 +19,15 @@ neasy=nlin+nnln
 !  THE VALUES OF THE CONSTRAINTS, THE JACOBIAN OF THE HESSIAN OF THE 
 !  LAGRANGIAN IS EXPECTED
 !
-if (useipopt .gt. 0) then
-  if ( mode .eq. 1) then
+if (useipopt > 0) then
+  if ( mode == 1) then
     do 5  k=1, nlin
       c(k)=0.0d0
       do 6 i=1, n
         c(k)= c(k)+amat(k, i)*x(i)
 6       continue
 5     continue  
-    if ( nnln .gt. 0 ) call easycon(n, x, nnln, c(nlin+1))
+    if ( nnln > 0 ) call easycon(n, x, nnln, c(nlin+1))
     if ( .not. usemerit) then
       do 10 k = 1, ncon
         l=k+neasy
@@ -40,13 +40,13 @@ if (useipopt .gt. 0) then
 30         continue
 10       continue  
     endif
-  elseif (mode .eq. 2) then    
+  elseif (mode == 2) then    
     do 15  k=1, nlin
       do 16 i=1, n
         cjac(k,i)= amat(k, i)
 16        continue
 15     continue  
-    if ( nnln .gt. 0 ) call easyjac(n, x, nnln, nrowj, &
+    if ( nnln > 0 ) call easyjac(n, x, nnln, nrowj, &
                        cjac(nlin+1,1))
     if ( .not. usemerit) then
       do 60 k = 1, ncon
@@ -59,7 +59,7 @@ if (useipopt .gt. 0) then
 50         continue
 60       continue 
     endif 
-   else if ( mode .eq. 3 ) then
+   else if ( mode == 3 ) then
     do 65  k=1, n
       do 66 i=1, n
         cjac(k,i)= hmod(k,i)

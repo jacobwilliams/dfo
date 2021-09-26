@@ -50,12 +50,12 @@
  ipoint = (j-1)*n
 
 
- if (i.eq.1) then
+ if (i==1) then
 !
 !  IF THE I-TH POLYNOMIAL IS A  CONSTANT
 !
    val = poly(1)
- else if (i.le.np1) then
+ else if (i<=np1) then
 !
 !  IF THE I-TH POLYNOMIAL IS LINEAR
 !
@@ -143,12 +143,12 @@
  double precision v
  np1    = n+1
 
- if (i.eq.1) then
+ if (i==1) then
 !
 !  IF THE I-TH POLYNOMIAL IS A  CONSTANT
 !
    val = poly(1)
- else if (i.le.np1) then
+ else if (i<=np1) then
 !
 !  IF THE I-TH POLYNOMIAL IS LINEAR
 !

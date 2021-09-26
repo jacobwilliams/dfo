@@ -193,7 +193,7 @@
 ! UPDATE ALL RELATED VALUES APPROPRIATELY
 !
 
- if (base.ne.1) then
+ if (base/=1) then
    pbase     = in2sp(base)
    ipbase    = (pbase-1)*n+1
    call dcopy(n, points(ipbase), 1, pntint, 1)
@@ -217,7 +217,7 @@
 !  THE THE LINEAR BLOCK TILL THE END WITH DUMMY ELEMENTS
 !  (SEE COMMENTS IN SUBROUTINE COMPL)
 !
-   if ( i .gt. n + 1 - neqcon .and. i .le. n + 1) then
+   if ( i > n + 1 - neqcon .and. i <= n + 1) then
       ibeg = 2 + (n+1)*(i-2) 
       iend = 1 + (n+1)*(i-1)
       do 53 j=ibeg, iend
@@ -241,7 +241,7 @@
 !
 !  IF ALL  THE POINTS ARE ALREADY USED, THEN QUIT
 !
-   if ( i .gt. q ) go to 85
+   if ( i > q ) go to 85
 
 !
 ! SET THE NUMBER OF LAYERS. BY SETTING IT TO A LARGER VALUE WE ALLOW
@@ -256,9 +256,9 @@
 !
    val = zero
    do 55 k = 1, q
-     if ( distp(k) .gt. val ) val = distp(k)
+     if ( distp(k) > val ) val = distp(k)
 55    continue  
-   if ( i .le. npmin ) then
+   if ( i <= npmin ) then
      nlayer = val/delta + 1
    else
      nlayer = layer   
@@ -269,7 +269,7 @@
 !  
    do 80 lv=1,nlayer
 
-     if ( i .le. np1 ) then
+     if ( i <= np1 ) then
        ipend = np1
      else
        ipend = dd
@@ -298,8 +298,8 @@
 !  IF THE J-TH POINT SATISFIES DISTANCE REQUIREMENTS THEN PICK IT AS
 !  A CANDIDATE
 !
-         if ( distp(j) .le. delu .and. distp(j) .gt. dell &
-              .and. sp2in(j).eq.0 ) then
+         if ( distp(j) <= delu .and. distp(j) > dell &
+              .and. sp2in(j)==0 ) then
 !
 !  EVALUATE THE I-TH POLYNOMIAL AT THE PICKED POINT
 !
@@ -310,7 +310,7 @@
 !  THEN ACCEPT THIS POINT AS THE BEST CANDIDATE
 !
 
-           if ( abs(val).gt.abs(vmax) + 100*mcheps ) then
+           if ( abs(val)>abs(vmax) + 100*mcheps ) then
              vmax=val
              jmax=j
            endif
@@ -324,7 +324,7 @@
 !  THEN STOP LOOKING FOR MORE POINT AND MOVE ON TO INCLUDING THE
 !  CURRENT BEST.
 !
-       if (abs(vmax).ge.pivthr) go to 90
+       if (abs(vmax)>=pivthr) go to 90
 
 !
 !  OTHERWISE MOVE TO THE  NEXT LAYER
@@ -338,7 +338,7 @@
 !  CANNOT FIND PIVOT LARGE ENOUGH
 !
 
-85    if (abs(vmax).lt.pivthr  ) then
+85    if (abs(vmax)<pivthr  ) then
      nind=i-1
 
 !
@@ -355,7 +355,7 @@
 
 90    j   = jmax
    val = vmax
-   if ( iprint .ge. 3 ) write(iout, 8000) j, ipol, val
+   if ( iprint >= 3 ) write(iout, 8000) j, ipol, val
 
 !
 !  PLACE POLYNOMIAL WITH INDEX 'IPOLY' ON THE I-TH PLACE
@@ -363,7 +363,7 @@
 !  THIS IS DONE BECAUSE OF SOME SPECIFICS OF THE CODE
 !  (BY EVENTUALLY MODIFYING THE CODE WE CAN AVOID SUCH SWAPPING )
 !
-   if ( ipol .ne. i )  call swapnp( n, i, ipol, poly, lpoly )   
+   if ( ipol /= i )  call swapnp( n, i, ipol, poly, lpoly )   
 !
 ! ASSOCIATE INTERPOLATION POINT J WITH THE I-TH POLYNOMIAL
 ! WRITE THE POINT INTO Y AND THE CORRESPONDING VALUE INTO VALINT
@@ -379,11 +379,11 @@
 !  NORMALIZE THE I-TH POLYNOMIAL
 !
 
-   if (i.eq.1) then
+   if (i==1) then
      poly(i) = one 
      ll = 1
 
-   else if (i.le.np1) then
+   else if (i<=np1) then
      k  = (i-2)*(np1)+2
      kk = k + n 
      do 100 j = k,kk
@@ -415,11 +415,11 @@
    call evalnp(val, pntint, i,  poly, i, n, lptint, lpoly)
 
 
-   if (i.eq.1) then
+   if (i==1) then
      poly(i) = one 
      ll = 1
 
-   else if (i.le.np1) then
+   else if (i<=np1) then
      k  = (i-2)*(np1)+2
      kk = k + n
      do 120 j = k,kk
@@ -443,13 +443,13 @@
 !   
 
 
-   if (i.eq.1) then
+   if (i==1) then
 !
 !   POLYNOMIAL IS A CONSTANT, DO NOTING
 !
      continue
 
-   else if (i.le.np1) then
+   else if (i<=np1) then
 
 ! 
 !  WE ARE IN LINEAR BLOCK, ALL PREVIOUS POLYNOMIALS IN LINEAR BLOCK ARE UPDATED
@@ -539,9 +539,9 @@ dd  = np1*np2/2
 !
 !  IF WE THE SWAP IS PERFORMED IN THE LINEAR BLOCK
 !
-if (i .le. np1 ) then
-  if ( j .gt. np1 ) then
-    if ( iprint .ge. 0 ) write( iout, 1000 ) 
+if (i <= np1 ) then
+  if ( j > np1 ) then
+    if ( iprint >= 0 ) write( iout, 1000 ) 
     stop
   endif
   kend = np1
@@ -551,7 +551,7 @@ else
 !
 !  IF WE THE SWAP IS PERFORMED IN THE QUADRATIC BLOCK
 !
-  if ( j .le. np1 ) then
+  if ( j <= np1 ) then
     write( iout, 1000 ) 
     stop
   endif
@@ -562,7 +562,7 @@ endif
 !
 !  PERFORM THE SWAP
 !
-if ( j .ne. i ) then
+if ( j /= i ) then
   do 60 k=1,kend
     val        = poly(kj+k)
     poly(kj+k) = poly(ki+k)

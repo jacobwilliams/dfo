@@ -92,7 +92,7 @@ intrinsic        abs
 !  CHECK IF INTERPOLATION SET CONTAINS ELEMENTS FROM QUADRATIC BLOCK OR NOT
 !
 
- if ( nind .le. np1 ) then
+ if ( nind <= np1 ) then
    block=1
  else
    block=2
@@ -108,22 +108,22 @@ intrinsic        abs
 
  vmax  = 0.0d0
  ipoly = 0
- if (block.eq.2) then
+ if (block==2) then
 
 !
 !  IF WE START WITH THE QUADRATIC BLOCK
 !
 
    do 10 i=np2, nind
-     if ( i .ne. base ) then
+     if ( i /= base ) then
        call evalx(val, xnew, poly, i, n,  lpoly)
-       if ( abs(val) .gt. abs(vmax) ) then
+       if ( abs(val) > abs(vmax) ) then
          vmax=val
          ipoly=i
        endif
      endif
 10    continue
-   if ( ipoly .eq. 0 .or. abs(vmax*pivval(ipoly)) .lt. pivthr ) &
+   if ( ipoly == 0 .or. abs(vmax*pivval(ipoly)) < pivthr ) &
      then
      fail=.true.
      return
@@ -135,12 +135,12 @@ intrinsic        abs
 !
    do 20 i=2, nind
      call evalx(val, xnew, poly, i, n, lpoly)
-     if ( abs(val) .gt. abs(vmax) ) then
+     if ( abs(val) > abs(vmax) ) then
        vmax  = val
        ipoly = i
      endif
 20    continue
-   if ( ipoly .eq. 0 .or. abs(vmax*pivval(ipoly)) .lt. pivthr ) &
+   if ( ipoly == 0 .or. abs(vmax*pivval(ipoly)) < pivthr ) &
      then
      fail=.true.
      return

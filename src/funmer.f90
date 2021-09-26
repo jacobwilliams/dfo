@@ -27,11 +27,11 @@
 !
 !       CALL CFN( N , M , X , F , M, C)
 !
-!       IF (.NOT.( F .LT. 10.0D20 .AND. F .GT. -10.0D20 ))
+!       IF (.NOT.( F < 10.0D20 .AND. F > -10.0D20 ))
 !     +            IFERR = .TRUE.
 !
 !       DO 10 I=1, M
-!         IF (.NOT.( C(I) .LT. 10.0D20 .AND. C(I) .GT. -10.0D20 ))
+!         IF (.NOT.( C(I) < 10.0D20 .AND. C(I) > -10.0D20 ))
 !     +              IFERR = .TRUE.
 ! 10    CONTINUE
 !
@@ -64,19 +64,19 @@ save / dfocm /
 !
 
  val=objval
- if ( method .ne. 4 ) then 
+ if ( method /= 4 ) then 
    do 10 i =1, m
-     if (cl(i)-cnstol.gt.c(i)) then
+     if (cl(i)-cnstol>c(i)) then
         val = val + pp*(cl(i)-c(i))
-     elseif  (cu(i)+cnstol.lt.c(i)) then
+     elseif  (cu(i)+cnstol<c(i)) then
         val = val + pp*(c(i)-cu(i))
      endif
 10    continue
  else
    do 20 i =1, m
-     if (cl(i)-cnstol.gt.c(i)) then
+     if (cl(i)-cnstol>c(i)) then
         val = val + pp*(cl(i)-c(i))**2
-     elseif  (cu(i)+cnstol.lt.c(i)) then
+     elseif  (cu(i)+cnstol<c(i)) then
         val = val + pp*(c(i)-cu(i))**2
      endif
 20    continue

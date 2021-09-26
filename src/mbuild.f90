@@ -86,7 +86,7 @@ dd=(n+1)*(n+2)/2
 !
 
 froben=.false.
-if (varnt.eq.1 .and. nind .gt. n+1 .and. nind.lt.dd) froben=.true.
+if (varnt==1 .and. nind > n+1 .and. nind<dd) froben=.true.
 
 
 !
@@ -109,13 +109,13 @@ endif
 !  CHECK IF THE WORKING SPACE IS SUFFICIENT
 !
 
-if ( lenw .lt. 1 ) then
-   if ( iprint .ge. 0 ) write( iout, 1100 ) -lenw+1
+if ( lenw < 1 ) then
+   if ( iprint >= 0 ) write( iout, 1100 ) -lenw+1
    stop
 endif
 
-if ( liwrk .lt. 1 ) then
-   if ( iprint .ge. 0 )  write( iout, 1200 ) -liwrk+1
+if ( liwrk < 1 ) then
+   if ( iprint >= 0 )  write( iout, 1200 ) -liwrk+1
    stop
 endif
 
@@ -359,18 +359,18 @@ fail = .false.
 !  CHECK SUFFICIENCY OF THE WORKSPACE
 !    
 
-if (lwrk .lt. 3*q) then
-  if ( iprint .ge. 0 ) write(iout, 1000) 3*q
+if (lwrk < 3*q) then
+  if ( iprint >= 0 ) write(iout, 1000) 3*q
   stop
 endif
 
-if (liwrk .lt. q) then
-  if ( iprint .ge. 0 ) write(iout, 2000) q
+if (liwrk < q) then
+  if ( iprint >= 0 ) write(iout, 2000) q
   stop
 endif 
 
 
-if ( iprint .ge. 3 )   write(iout, 8000)
+if ( iprint >= 3 )   write(iout, 8000)
 
 !
 !  SHIFT ALL THE POINT SO THAT THE BASE IS AT THE ORIGIN AND PUT THE
@@ -381,7 +381,7 @@ if ( iprint .ge. 3 )   write(iout, 8000)
  jbase=(base-1)*n
  ny=0
  do 5 i = 1,q
-   if (i .ne. base .and. (i .le. n+1-neqcon .or. i.gt.n+1) ) then
+   if (i /= base .and. (i <= n+1-neqcon .or. i>n+1) ) then
      do 4 j=1,n
        y(ny*n+j) = pntint((i-1)*n+j)-pntint(jbase+j) 
 4      continue
@@ -423,8 +423,8 @@ if ( iprint .ge. 3 )   write(iout, 8000)
  call dpotrf('U', ny, matr, q, info)
 
 
- if ( info .ne. 0 ) then
-   if( iprint.gt.2 ) write(iout, 4000) 
+ if ( info /= 0 ) then
+   if( iprint>2 ) write(iout, 4000) 
    fail = .true.
    return
  endif
@@ -442,22 +442,22 @@ if ( iprint .ge. 3 )   write(iout, 8000)
  call dpocon('U' , ny  , matr, q , anorm, rcond, &
               wrk, iwrk, info)
 
- if ( info .ne. 0 ) then
-   if( iprint.gt.2 ) write(iout, 5000)  
+ if ( info /= 0 ) then
+   if( iprint>2 ) write(iout, 5000)  
    fail = .true.
    return
  endif
- if ( iprint .ge. 3 )   write(iout, 8010) rcond
+ if ( iprint >= 3 )   write(iout, 8010) rcond
 !
 !  CHECK IF THE CONDITION NUMBER IS NOT TOO BIG
 !  IF NOT, THEN FORM THE RIGHT HAND SIDE FOR THE LINEAR SYSTEM
 !  AND SOLVE THE SYSTEM USING LAPACK ROUTINES AND FACTORIZATION
 !  COMPUTED BY 'DPOTRF'. STORE THE SOLUTION IN 'VY'
 !
- if (rcond .ge. mcheps*1.0d4) then
+ if (rcond >= mcheps*1.0d4) then
    kk=0
    do 50 i = 1,q
-     if (i.ne.base .and. (i .le. n+1-neqcon .or. i.gt.n+1)) then
+     if (i/=base .and. (i <= n+1-neqcon .or. i>n+1)) then
        kk=kk+1
        vy(kk) = valint(i)-valint(base) 
      endif
@@ -509,7 +509,7 @@ if ( iprint .ge. 3 )   write(iout, 8000)
 !  BE HAPPENING
 !
    
-   if (iprint.gt.2) write (iout,3000) rcond
+   if (iprint>2) write (iout,3000) rcond
    fail = .true.
  endif
  return

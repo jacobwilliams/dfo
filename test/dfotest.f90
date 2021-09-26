@@ -162,44 +162,44 @@ integer           i
 !
 !  PROBLEM DIMENSION
 !
-if ( ntest .eq. 1 ) then
+if ( ntest == 1 ) then
   n=2
   optval=0.25
-elseif ( ntest .eq. 2 ) then
+elseif ( ntest == 2 ) then
   n=10
   optval=24.30621
-elseif ( ntest  .eq. 3 ) then
+elseif ( ntest  == 3 ) then
   n=10
   optval=-47.76065
-elseif ( ntest  .eq. 4 ) then
+elseif ( ntest  == 4 ) then
   n=2
   optval=0.0
-elseif ( ntest  .eq. 5 ) then
+elseif ( ntest  == 5 ) then
   n=10
   optval=-47.75997
-elseif ( ntest  .eq. 6 ) then
+elseif ( ntest  == 6 ) then
   n=3
   optval=0.0
-elseif ( ntest  .eq. 7 ) then
+elseif ( ntest  == 7 ) then
   n=5
   optval=0.0
-elseif ( ntest  .eq. 8 ) then
+elseif ( ntest  == 8 ) then
   n=10
   optval=-47.76065   
-!      ELSEIF ( NTEST .EQ. 9 ) THEN
+!      ELSEIF ( NTEST == 9 ) THEN
 !        N=2
 !        OPTVAL=0.0
-!      ELSEIF ( NTEST .EQ. 10 ) THEN
+!      ELSEIF ( NTEST == 10 ) THEN
 !        N=9
 !        OPTVAL=0.0
-!      ELSEIF ( NTEST  .EQ. 11 ) THEN
+!      ELSEIF ( NTEST  == 11 ) THEN
 !        N=10
 !        OPTVAL=-47.75997
-!      ELSEIF ( NTEST .EQ. 12 ) THEN
+!      ELSEIF ( NTEST == 12 ) THEN
 !        N=10
 !        OPTVAL=24.30621
 else
-   if ( iout .gt. 0 ) then
+   if ( iout > 0 ) then
       write( iout, 2100 )
    end if
    stop        
@@ -208,8 +208,8 @@ endif
 !
 !  CHECK IF THE MAXIMUM ALLOWED DIMENSION IS BIG ENOUGH
 !
-if ( n .gt. nmax ) then
-   if ( iout .gt. 0 ) then
+if ( n > nmax ) then
+   if ( iout > 0 ) then
       write( iout, 2000 ) 'X   ', 'NMAX  ', n - nmax
    end if
    stop
@@ -222,41 +222,41 @@ end if
 !
 
    ncnln=0
-if ( ntest .eq. 1 ) then
+if ( ntest == 1 ) then
    m=2
    nclin=0
-elseif ( ntest .eq. 2 ) then
+elseif ( ntest == 2 ) then
    m=5
    nclin=3
-elseif ( ntest .eq. 3 ) then
+elseif ( ntest == 3 ) then
    m=0
    nclin=3
-elseif ( ntest .eq. 4 ) then
+elseif ( ntest == 4 ) then
    nclin=0
    m=0
-elseif ( ntest .eq. 5 ) then
+elseif ( ntest == 5 ) then
    nclin=0
    m=3
-elseif ( ntest .eq. 6 ) then
+elseif ( ntest == 6 ) then
    nclin=0
    m=1
-elseif ( ntest .eq. 7 ) then
+elseif ( ntest == 7 ) then
    nclin=3
    m=0
-elseif ( ntest .eq. 8 ) then
+elseif ( ntest == 8 ) then
    nclin=0
    m=3
-elseif ( ntest .eq. 9 ) then
+elseif ( ntest == 9 ) then
    nclin=0
    m=0
-elseif ( ntest .eq. 10 ) then
+elseif ( ntest == 10 ) then
    nclin=0
    m=0
-elseif ( ntest .eq. 11 ) then
+elseif ( ntest == 11 ) then
    nclin=0
    m=1
    ncnln=2
-elseif ( ntest .eq. 12 ) then
+elseif ( ntest == 12 ) then
    m=3
    nclin=3
    ncnln=2
@@ -265,15 +265,15 @@ lda = max(1, nclmax)
 !
 !  CHECK THAT THE NUMBER OF CONSTRAINTS DO NOT EXCEED MAXIMUM
 !
-if ( nclin .gt. nclmax ) then
-   if ( iout .gt. 0 ) then
+if ( nclin > nclmax ) then
+   if ( iout > 0 ) then
       write( iout, 2000 ) 'ALIN  ', 'NCLMAX  ', nclin - nclmax
    end if
    stop
 end if
 
-if ( ncnln .gt. ncnmax ) then
-   if ( iout .gt. 0 ) then
+if ( ncnln > ncnmax ) then
+   if ( iout > 0 ) then
       write( iout, 2000 ) 'WRK  ', 'NCLMAX  ', ncnln - ncnmax
    end if
    stop
@@ -283,10 +283,10 @@ end if
 !
 !  SET THE STARTING POINT
 !
-if ( ntest .eq. 1 ) then
+if ( ntest == 1 ) then
   x(1)=-2.0d0
   x(2)=1.0d0
-elseif ( ntest .eq. 2) then
+elseif ( ntest == 2) then
   x(1)=2.0d0
   x(2)=3.0d0
   x(3)=5.0d0
@@ -297,35 +297,35 @@ elseif ( ntest .eq. 2) then
   x(8)=3.0d0
   x(9)=6.0d0
   x(10)=10.0d0
-elseif ( ntest .eq. 3) then
+elseif ( ntest == 3) then
   do 30 i = 1, n
     x(i)=0.1d0
 30   continue  
-elseif ( ntest .eq. 4) then
+elseif ( ntest == 4) then
   x(1)=-1.2d0
   x(2)=1.0d0
-elseif ( ntest .eq. 5) then
+elseif ( ntest == 5) then
   do 50 i = 1, n
     x(i)=-2.3d0
 50   continue        
-elseif ( ntest .eq. 6) then
+elseif ( ntest == 6) then
   x(1)=-2.6d0
   x(2)=2d0
   x(3)=2d0
-elseif ( ntest .eq. 7) then
+elseif ( ntest == 7) then
   x(1)=35d0
   x(2)=-31d0
   x(3)=11d0
   x(4)=5d0
   x(5)=-5d0
-elseif ( ntest .eq. 8) then
+elseif ( ntest == 8) then
   do 80 i = 1, n
     x(i)=0.1d0
 80   continue     
-elseif ( ntest .eq. 9 ) then
+elseif ( ntest == 9 ) then
   x(1)=0.5
   x(2)=0.5
-elseif ( ntest .eq. 10 ) then
+elseif ( ntest == 10 ) then
   x(1)=0.5
   x(2)=0.5
   x(3)=0.5
@@ -335,11 +335,11 @@ elseif ( ntest .eq. 10 ) then
   x(7)=0.5
   x(8)=-0.5
   x(9)=0.5
-elseif ( ntest .eq. 11) then
+elseif ( ntest == 11) then
   do 90 i = 1, n
     x(i)=-2.3d0
 90   continue  
-elseif ( ntest .eq. 12) then
+elseif ( ntest == 12) then
   x(1)=2.0d0
   x(2)=3.0d0
   x(3)=5.0d0
@@ -355,7 +355,7 @@ endif
 !
 !  SET THE BOUNDS
 !
-if ( ntest .eq. 1 ) then 
+if ( ntest == 1 ) then 
   bl(1)=-0.5d0
   bl(2)=-1.0d20
   bl(3)= 0.0d0
@@ -364,7 +364,7 @@ if ( ntest .eq. 1 ) then
   bu(2)=1.0d0
   bu(3)=1.0d20
   bu(4)=1.0d20
-elseif ( ntest .eq. 2 ) then
+elseif ( ntest == 2 ) then
   do 200 i=1,n
     bl(i)=-1.0d20 
     bu(i)=1.0d20 
@@ -379,7 +379,7 @@ elseif ( ntest .eq. 2 ) then
     bl(n+nclin+i)=0.0d0 
     bu(n+nclin+i)=1.0d20 
 210   continue
-elseif ( ntest .eq. 3 ) then
+elseif ( ntest == 3 ) then
   do 300 i=1,n
     bl(i)=1.0d-6
     bu(i)=1.0d20 
@@ -390,12 +390,12 @@ elseif ( ntest .eq. 3 ) then
   bu(12)=1.0d0 
   bl(13)=1.0d0 
   bu(13)=1.0d0 
-elseif ( ntest .eq. 4 ) then
+elseif ( ntest == 4 ) then
   bl(1)=-1.0d20
   bl(2)=-1.0d20
   bu(1)=1.0d20
   bu(2)=1.0d20
-elseif ( ntest .eq. 5 ) then
+elseif ( ntest == 5 ) then
   do 500 i=1,n
     bl(i)=-1.0d2
     bu(i)=1.0d2
@@ -406,14 +406,14 @@ elseif ( ntest .eq. 5 ) then
   bu(12)=1.0d0 
   bl(13)=1.0d0 
   bu(13)=1.0d0 
-elseif ( ntest .eq. 6 ) then
+elseif ( ntest == 6 ) then
   do 600 i=1,n
     bl(i)=-1.0d20
     bu(i)=1.0d20
 600   continue
     bl(4)=0.0d0
     bu(4)=0.0d0 
-elseif ( ntest .eq. 7 ) then
+elseif ( ntest == 7 ) then
   do 700 i=1,n
     bl(i)=-1.0d20
     bu(i)=1.0d20
@@ -422,7 +422,7 @@ elseif ( ntest .eq. 7 ) then
     bl(i+n)=6.0d0
     bu(i+n)=6.0d0
 710   continue
-elseif ( ntest .eq. 8 ) then
+elseif ( ntest == 8 ) then
   do 800 i=1,n
     bl(i)=1.0d-6
     bu(i)=1.0d20 
@@ -433,12 +433,12 @@ elseif ( ntest .eq. 8 ) then
   bu(12)=1.0d0 
   bl(13)=1.0d0 
   bu(13)=1.0d0 
-elseif ( ntest .eq. 9 ) then
+elseif ( ntest == 9 ) then
   bl(1)=-1.0d20
   bu(1)=1.0d20
   bl(2)=-1.0d20
   bu(2)=1.0d20
-elseif ( ntest .eq. 10 ) then
+elseif ( ntest == 10 ) then
   bl(1)=-1.0d0
   bu(1)=1.0d0
   bl(2)=-1.0d0
@@ -457,7 +457,7 @@ elseif ( ntest .eq. 10 ) then
   bu(8)=1.0d0
   bl(9)=-1.0d0
   bu(9)=1.0d0
-elseif ( ntest .eq. 11 ) then
+elseif ( ntest == 11 ) then
   do 900 i=1,n
     bl(i)=-1.0d2
     bu(i)=1.0d2
@@ -468,7 +468,7 @@ elseif ( ntest .eq. 11 ) then
   bu(12)=1.0d0 
   bl(13)=1.0d0 
   bu(13)=1.0d0 
-elseif ( ntest .eq. 12 ) then
+elseif ( ntest == 12 ) then
   do 1200 i=1,n
     bl(i)=-1.0d20 
     bu(i)=1.0d20 
@@ -487,9 +487,9 @@ endif
 !
 !  MATRIX OF LINEAR CONSTRAINTS
 !
-if ( ntest .eq. 1 ) then
+if ( ntest == 1 ) then
   continue
-elseif ( ntest .eq. 2 ) then
+elseif ( ntest == 2 ) then
   do 230 i = 1, n
     do 240 j = 1, nclin
       alin(j, i)=0.0d0
@@ -507,7 +507,7 @@ elseif ( ntest .eq. 2 ) then
   alin(3,2)=-2.0d0
   alin(3,9)=-5.0d0
   alin(3,10)=2.0d0
-elseif ( ntest .eq. 3 ) then
+elseif ( ntest == 3 ) then
   do 330 i = 1, n
     do 340 j = 1, nclin
       alin(j, i)=0.0d0
@@ -527,13 +527,13 @@ elseif ( ntest .eq. 3 ) then
   alin(3,8)=1.0d0
   alin(3,9)=2.0d0
   alin(3,10)=1.0d0
-elseif ( ntest .eq. 4 ) then
+elseif ( ntest == 4 ) then
   continue
-elseif ( ntest .eq. 5 ) then
+elseif ( ntest == 5 ) then
   continue
-elseif ( ntest .eq. 6 ) then
+elseif ( ntest == 6 ) then
   continue
-elseif ( ntest .eq. 7 ) then
+elseif ( ntest == 7 ) then
   do 730 i = 1, n
     do 740 j = 1, nclin
       alin(j, i)=0.0d0
@@ -548,15 +548,15 @@ elseif ( ntest .eq. 7 ) then
   alin(3,3)=1.0d0
   alin(3,4)=2.0d0
   alin(3,5)=3.0d0
-elseif ( ntest .eq. 8 ) then
+elseif ( ntest == 8 ) then
   continue
-elseif ( ntest .eq. 9 ) then
+elseif ( ntest == 9 ) then
   continue
-elseif ( ntest .eq. 10 ) then
+elseif ( ntest == 10 ) then
   continue
-elseif ( ntest .eq. 11 ) then
+elseif ( ntest == 11 ) then
   continue
-elseif ( ntest .eq. 12 ) then
+elseif ( ntest == 12 ) then
   do 830 i = 1, n
     do 840 j = 1, nclin
       alin(j, i)=0.0d0
@@ -618,13 +618,13 @@ save /test/
 !
 !  SETTING NAMES FOR VARIABLES AND PROBLEM
 !
-if ( ntest .eq. 1 ) then
+if ( ntest == 1 ) then
   pname='HS16'
   vnames(1)='X1'
   vnames(2)='X2'
   gnames(1)='CON1'
   gnames(2)='CON2'
-elseif ( ntest .eq. 2 ) then
+elseif ( ntest == 2 ) then
   pname='HS113'
   vnames(1)='X1'
   vnames(2)='X2'
@@ -641,7 +641,7 @@ elseif ( ntest .eq. 2 ) then
   gnames(3)='CON3'
   gnames(4)='CON4'
   gnames(5)='CON5'
-elseif ( ntest .eq. 3 ) then
+elseif ( ntest == 3 ) then
   pname='HS112'
   vnames(1)='X1'
   vnames(2)='X2'
@@ -656,11 +656,11 @@ elseif ( ntest .eq. 3 ) then
   gnames(1)='CON1'
   gnames(2)='CON2'
   gnames(3)='CON3'
-elseif ( ntest .eq. 4 ) then
+elseif ( ntest == 4 ) then
   pname='ROSENBR'
   vnames(1)='X1'
   vnames(2)='X2'
-elseif ( ntest .eq. 5 ) then
+elseif ( ntest == 5 ) then
   pname='HS111'
   vnames(1)='X1'
   vnames(2)='X2'
@@ -675,13 +675,13 @@ elseif ( ntest .eq. 5 ) then
   gnames(1)='CON1'
   gnames(2)='CON2'
   gnames(3)='CON3'
-elseif ( ntest .eq. 6 ) then
+elseif ( ntest == 6 ) then
   pname='HS26'
   vnames(1)='X1'
   vnames(2)='X2'
   vnames(3)='X3'
   gnames(1)='CON1'
-elseif ( ntest .eq. 7 ) then
+elseif ( ntest == 7 ) then
   pname='HS50'
   vnames(1)='X1'
   vnames(2)='X2'
@@ -691,7 +691,7 @@ elseif ( ntest .eq. 7 ) then
   gnames(1)='CON1'
   gnames(2)='CON2'
   gnames(3)='CON3'
-elseif ( ntest .eq. 8 ) then
+elseif ( ntest == 8 ) then
   pname='HS112'
   vnames(1)='X1'
   vnames(2)='X2'
@@ -706,11 +706,11 @@ elseif ( ntest .eq. 8 ) then
   gnames(1)='CON1'
   gnames(2)='CON2'
   gnames(3)='CON3'    
-elseif ( ntest .eq. 9 ) then
+elseif ( ntest == 9 ) then
   pname='RANDOM-NOISE'
   vnames(1)='X1'
   vnames(2)='X2'
-elseif ( ntest .eq. 10 ) then
+elseif ( ntest == 10 ) then
   pname='UGLY-PROBLEM'
   vnames(1)='X1'
   vnames(2)='X2'
@@ -721,7 +721,7 @@ elseif ( ntest .eq. 10 ) then
   vnames(7)='X1'
   vnames(8)='X2'
   vnames(9)='X3'
-elseif ( ntest .eq. 11 ) then
+elseif ( ntest == 11 ) then
   pname='HS111'
   vnames(1)='X1'
   vnames(2)='X2'
@@ -736,7 +736,7 @@ elseif ( ntest .eq. 11 ) then
   gnames(1)='CON1'
   gnames(2)='CON2'
   gnames(3)='CON3'
-elseif ( ntest .eq. 12 ) then
+elseif ( ntest == 12 ) then
   pname='HS113'
   vnames(1)='X1'
   vnames(2)='X2'
@@ -778,82 +778,82 @@ end
 !C
 !      INTEGER           NTEST
 !      COMMON  /TEST/    NTEST
-!      IF ( NTEST .EQ. 1 ) THEN 
+!      IF ( NTEST == 1 ) THEN 
 !        DO 10 I=1, NCNLN
-!          IF( NEEDC(I).NE.0 ) THEN
-!            IF ( MODE .EQ. 0 .OR. MODE .EQ. 2 )  THEN    
-!              IF(I.EQ.1) THEN
+!          IF( NEEDC(I)/=0 ) THEN
+!            IF ( MODE == 0 .OR. MODE == 2 )  THEN    
+!              IF(I==1) THEN
 !                C(1)=X(1)+X(2)*X(2)
 !              ENDIF
-!              IF(I.EQ.2) THEN
+!              IF(I==2) THEN
 !                 C(2)=X(1)*X(1)+X(2)
 !              ENDIF
 !            ENDIF
-!            IF ( MODE .EQ. 1 .OR. MODE .EQ. 2 ) THEN
-!              IF(I.EQ.1) THEN
+!            IF ( MODE == 1 .OR. MODE == 2 ) THEN
+!              IF(I==1) THEN
 !                CJAC(1,1)=1
 !                CJAC(1,2)=2*X(2)
 !              ENDIF
-!              IF(I.EQ.2) THEN
+!              IF(I==2) THEN
 !                CJAC(2,1)=2*X(1)
 !                CJAC(2,2)=1      
 !              ENDIF
 !            ENDIF
 !          ENDIF      
 ! 10     CONTINUE
-!      ELSEIF ( NTEST .EQ. 2 ) THEN
+!      ELSEIF ( NTEST == 2 ) THEN
 !       DO 20 I=1, NCNLN
-!          IF( NEEDC(I).NE.0 ) THEN
-!            IF ( MODE .EQ. 0 .OR. MODE .EQ. 2 )  THEN    
-!              IF(I.EQ.1) THEN
+!          IF( NEEDC(I)/=0 ) THEN
+!            IF ( MODE == 0 .OR. MODE == 2 )  THEN    
+!              IF(I==1) THEN
 !                C(1)=-3*(X(1)-2)**2-4*(X(2)-3)**2-2*X(3)**2+
 !     +                7*X(4)+120
 !              ENDIF
-!              IF(I.EQ.2) THEN
+!              IF(I==2) THEN
 !                C(2)=-5*X(1)**2-8*X(2)
 !     +                - (X(3)-6)**2+2*X(4)+ 40
 !              ENDIF
-!              IF(I.EQ.3) THEN
+!              IF(I==3) THEN
 !                C(3)=-0.5*(X(1)-8)**2-2*(X(2)-4)**2-3*X(5)**2+
 !     +                X(6) + 30
 !              ENDIF
-!              IF(I.EQ.4) THEN
+!              IF(I==4) THEN
 !                C(4)=-X(1)**2-2*(X(2)-2)**2+2*X(1)*X(2)-
 !     +                14*X(5)+6*X(6)
 !              ENDIF
-!              IF(I.EQ.5) THEN
+!              IF(I==5) THEN
 !                C(5)=3*X(1)-6*X(2)-12*(X(9)-8)**2+7*X(10)
 !              ENDIF
 !            ENDIF
-!            IF ( MODE .EQ. 1 .OR. MODE .EQ. 2 ) THEN
+!            IF ( MODE == 1 .OR. MODE == 2 ) THEN
 !              DO 25 J = 1, N
 !                CJAC(I, J) = 0.0D0
 ! 25           CONTINUE  
-!              IF(I.EQ.1) THEN
+!              IF(I==1) THEN
 !                CJAC(1,1)=-6*X(1)+12D0
 !                CJAC(1,2)=-8*X(2)+24D0    
 !                CJAC(1,3)=-4*X(3)
 !                CJAC(1,4)=7D0    
 !              ENDIF
-!              IF(I.EQ.2) THEN
+!              IF(I==2) THEN
 !                CJAC(2,1)=-10D0*X(1)
 !                CJAC(2,2)=-8D0  
 !                CJAC(2,3)=-2D0*X(3)+12
 !                CJAC(2,4)=2D0     
 !              ENDIF
-!              IF(I.EQ.3) THEN
+!              IF(I==3) THEN
 !                CJAC(3,1)=-X(1)+8D0
 !                CJAC(3,2)=-4*X(2)+16D0   
 !                CJAC(3,5)=-6*X(5)
 !                CJAC(3,6)=1D0   
 !              ENDIF
-!              IF(I.EQ.4) THEN
+!              IF(I==4) THEN
 !                CJAC(4,1)=-2*X(1)+2D0*X(2)
 !                CJAC(4,2)=-4*X(2)+8D0+2*X(1)   
 !                CJAC(4,5)=-14D0
 !                CJAC(4,6)=6D0  
 !              ENDIF
-!              IF(I.EQ.5) THEN
+!              IF(I==5) THEN
 !                CJAC(5,1)=3D0
 !                CJAC(5,2)=-6D0  
 !                CJAC(5,9)=-24D0*X(9)+192
@@ -862,57 +862,57 @@ end
 !            ENDIF
 !          ENDIF      
 ! 20     CONTINUE        
-!      ELSEIF ( NTEST .EQ. 3 ) THEN
+!      ELSEIF ( NTEST == 3 ) THEN
 !        CONTINUE
-!      ELSEIF ( NTEST .EQ. 4 ) THEN
+!      ELSEIF ( NTEST == 4 ) THEN
 !        CONTINUE
-!      ELSEIF ( NTEST .EQ. 5 ) THEN
+!      ELSEIF ( NTEST == 5 ) THEN
 !        CONTINUE
-!      ELSEIF ( NTEST .EQ. 6 ) THEN
-!        IF( NEEDC(1).NE.0 ) THEN
-!          IF ( MODE .EQ. 0 .OR. MODE .EQ. 2 )  THEN    
+!      ELSEIF ( NTEST == 6 ) THEN
+!        IF( NEEDC(1)/=0 ) THEN
+!          IF ( MODE == 0 .OR. MODE == 2 )  THEN    
 !                C(1)=(1D0+X(2)**2)*X(1)+X(3)**4-3
 !          ENDIF
-!          IF ( MODE .EQ. 1 .OR. MODE .EQ. 2 ) THEN
+!          IF ( MODE == 1 .OR. MODE == 2 ) THEN
 !            CJAC(1,1)=1D0+X(2)**2
 !            CJAC(1,2)=2D0*X(1)*X(2)
 !            CJAC(1,3)=4*X(3)**3
 !          ENDIF
 !        ENDIF
-!      ELSEIF ( NTEST .EQ. 7 ) THEN 
+!      ELSEIF ( NTEST == 7 ) THEN 
 !        CONTINUE
-!      ELSEIF ( NTEST .EQ. 8 ) THEN
+!      ELSEIF ( NTEST == 8 ) THEN
 !        DO 80 I=1, NCNLN
-!          IF( NEEDC(I).NE.0 ) THEN
-!            IF ( MODE .EQ. 0 .OR. MODE .EQ. 2 )  THEN    
-!              IF(I.EQ.1) THEN
+!          IF( NEEDC(I)/=0 ) THEN
+!            IF ( MODE == 0 .OR. MODE == 2 )  THEN    
+!              IF(I==1) THEN
 !                C(1)=X(1)+2*X(2)+2*X(3)+X(6)**2+X(10)
 !              ENDIF
-!              IF(I.EQ.2) THEN
+!              IF(I==2) THEN
 !                C(2)=X(4)+2*X(5)+X(6)**2+X(7)
 !              ENDIF
-!              IF(I.EQ.3) THEN
+!              IF(I==3) THEN
 !                C(3)=X(3)+X(7)+X(8)+2*X(9)+X(10)
 !              ENDIF
 !            ENDIF
-!            IF ( MODE .EQ. 1 .OR. MODE .EQ. 2 ) THEN
+!            IF ( MODE == 1 .OR. MODE == 2 ) THEN
 !              DO 85 J = 1, N
 !                CJAC(I, J) = 0.0D0
 ! 85           CONTINUE  
-!              IF(I.EQ.1) THEN
+!              IF(I==1) THEN
 !                CJAC(1,1)=1.0d0
 !                CJAC(1,2)=2.0d0    
 !                CJAC(1,3)=2.0d0
 !                CJAC(1,6)=2.0d0*X(6)
 !                CJAC(1,10)=1.0d0    
 !              ENDIF
-!              IF(I.EQ.2) THEN
+!              IF(I==2) THEN
 !                CJAC(2,4)=1.0d0
 !                CJAC(2,5)=2.0d0  
 !                CJAC(2,6)=2.0d0*X(6)
 !                CJAC(2,7)=1.0d0   
 !              ENDIF
-!              IF(I.EQ.3) THEN
+!              IF(I==3) THEN
 !                CJAC(3,3)=1.0d0
 !                CJAC(3,7)=1.0d0 
 !                CJAC(3,8)=1.0d0
@@ -922,44 +922,44 @@ end
 !            ENDIF
 !          ENDIF      
 ! 80     CONTINUE 
-!      ELSEIF ( NTEST .EQ. 9 ) THEN
+!      ELSEIF ( NTEST == 9 ) THEN
 !        CONTINUE
-!      ELSEIF ( NTEST .EQ. 10 ) THEN
+!      ELSEIF ( NTEST == 10 ) THEN
 !        CONTINUE
-!      ELSEIF ( NTEST .EQ. 11 ) THEN
+!      ELSEIF ( NTEST == 11 ) THEN
 !        DO 50 I=1, NCNLN
-!          IF( NEEDC(I).NE.0 ) THEN
-!            IF ( MODE .EQ. 0 .OR. MODE .EQ. 2 )  THEN    
-!              IF(I.EQ.1) THEN
+!          IF( NEEDC(I)/=0 ) THEN
+!            IF ( MODE == 0 .OR. MODE == 2 )  THEN    
+!              IF(I==1) THEN
 !                C(1)=EXP(X(1))+2*EXP(X(2))+2*EXP(X(3))+EXP(X(6))+
 !     +               EXP(X(10))
 !              ENDIF
-!              IF(I.EQ.2) THEN
+!              IF(I==2) THEN
 !                C(2)=EXP(X(4))+2*EXP(X(5))+EXP(X(6))+EXP(X(7))
 !              ENDIF
-!              IF(I.EQ.3) THEN
+!              IF(I==3) THEN
 !                C(3)=EXP(X(3))+EXP(X(7))+EXP(X(8))+2*EXP(X(9))+
 !     +               EXP(X(10))
 !              ENDIF
 !            ENDIF
-!            IF ( MODE .EQ. 1 .OR. MODE .EQ. 2 ) THEN
+!            IF ( MODE == 1 .OR. MODE == 2 ) THEN
 !              DO 55 J = 1, N
 !                CJAC(I, J) = 0.0D0
 ! 55           CONTINUE  
-!              IF(I.EQ.1) THEN
+!              IF(I==1) THEN
 !                CJAC(1,1)=EXP(X(1))
 !                CJAC(1,2)=2*EXP(X(2))    
 !                CJAC(1,3)=2*EXP(X(3))
 !                CJAC(1,6)=EXP(X(6))
 !                CJAC(1,10)=EXP(X(10))    
 !              ENDIF
-!              IF(I.EQ.2) THEN
+!              IF(I==2) THEN
 !                CJAC(2,4)=EXP(X(4))
 !                CJAC(2,5)=2*EXP(X(5))  
 !                CJAC(2,6)=EXP(X(6))
 !                CJAC(2,7)=EXP(X(7))   
 !             ENDIF
-!              IF(I.EQ.3) THEN
+!              IF(I==3) THEN
 !                CJAC(3,3)=EXP(X(3))
 !                CJAC(3,7)=EXP(X(7))  
 !                CJAC(3,8)=EXP(X(8))
@@ -1005,11 +1005,11 @@ external         gennor
 intrinsic        log, exp, sqrt
 
 iferr=.false.
-if ( ntest .eq. 1 ) then 
+if ( ntest == 1 ) then 
   val = 100.0d0*(x(2)-x(1)**2)**2+(1.0d0-x(1))**2
   c(1)=x(1)+x(2)*x(2)
   c(2)=x(1)*x(1)+x(2)
-elseif ( ntest .eq. 2 ) then
+elseif ( ntest == 2 ) then
   val = x(1)**2 + x(2)**2 + x(1)*x(2) - 14d0*x(1) - 16d0*x(2)+ &
         (x(3)-10)**2 + 4d0*(x(4)-5d0)**2+(x(5)-3d0)**2+ &
         2.0d0*(x(6)-1d0)**2+ &
@@ -1024,7 +1024,7 @@ elseif ( ntest .eq. 2 ) then
           c(4)=-x(1)**2-2*(x(2)-2)**2+2*x(1)*x(2)- &
                 14*x(5)+6*x(6)
           c(5)=3*x(1)-6*x(2)-12*(x(9)-8)**2+7*x(10)
-elseif ( ntest .eq. 3 ) then
+elseif ( ntest == 3 ) then
   chs112(1)=-6.089d0
   chs112(2)=-17.164d0
   chs112(3)=-34.054d0
@@ -1043,9 +1043,9 @@ elseif ( ntest .eq. 3 ) then
   do 31 i=1, n  
     val = val + x(i)*(chs112(i)+log(x(i)/sum))
 31   continue  
-elseif ( ntest .eq. 4 ) then
+elseif ( ntest == 4 ) then
   val = 100.0d0*(x(2)-x(1)**2)**2+(1.0d0-x(1))**2        
-elseif ( ntest .eq. 5 ) then
+elseif ( ntest == 5 ) then
   chs112(1)=-6.089d0
   chs112(2)=-17.164d0
   chs112(3)=-34.054d0
@@ -1069,13 +1069,13 @@ elseif ( ntest .eq. 5 ) then
           c(2)=exp(x(4))+2*exp(x(5))+exp(x(6))+exp(x(7))
           c(3)=exp(x(3))+exp(x(7))+exp(x(8))+2*exp(x(9))+ &
                exp(x(10))
-elseif ( ntest .eq. 6 ) then
+elseif ( ntest == 6 ) then
   val = (x(1)-x(2))**2+(x(2)-x(3))**4
   c(1)=(1d0+x(2)**2)*x(1)+x(3)**4-3
-elseif ( ntest .eq. 7 ) then
+elseif ( ntest == 7 ) then
   val = (x(1)-x(2))**2+(x(2)-x(3))**2+(x(3)-x(4))**4+ &
         (x(4)-x(5))**2
-elseif ( ntest .eq. 8 ) then
+elseif ( ntest == 8 ) then
   chs112(1)=-6.089d0
   chs112(2)=-17.164d0
   chs112(3)=-34.054d0
@@ -1097,10 +1097,10 @@ elseif ( ntest .eq. 8 ) then
           c(1)=x(1)+2*x(2)+2*x(3)+x(6)**2+x(10)
           c(2)=x(4)+2*x(5)+x(6)**2+x(7)
           c(3)=x(3)+x(7)+x(8)+2*x(9)+x(10)
-elseif ( ntest .eq. 9 ) then
+elseif ( ntest == 9 ) then
 !        val=gennor(0.0, 0.0001)
   val=x(1)**2+x(2)**2
-elseif ( ntest .eq. 10 ) then
+elseif ( ntest == 10 ) then
   val=sqrt((x(1)-x(4))**2+(x(2)-x(5))**2+(x(3)-x(6))**2)
   sum=exp((-12.0d0)*log(val))-2.0d0*exp((-6.0d0)*log(val))
   val=sqrt((x(1)-x(7))**2+(x(2)-x(8))**2+(x(3)-x(9))**2)
@@ -1108,7 +1108,7 @@ elseif ( ntest .eq. 10 ) then
   val=sqrt((x(7)-x(4))**2+(x(8)-x(5))**2+(x(9)-x(6))**2)
   sum=sum+exp((-12.0d0)*log(val))-2.0d0*exp((-6.0d0)*log(val))
   val=sum
-elseif ( ntest .eq. 11 ) then
+elseif ( ntest == 11 ) then
   chs112(1)=-6.089d0
   chs112(2)=-17.164d0
   chs112(3)=-34.054d0
@@ -1132,7 +1132,7 @@ elseif ( ntest .eq. 11 ) then
 !                C(2)=EXP(X(4))+2*EXP(X(5))+EXP(X(6))+EXP(X(7))
           c(1)=exp(x(3))+exp(x(7))+exp(x(8))+2*exp(x(9))+ &
                exp(x(10))
-elseif ( ntest .eq. 12 ) then
+elseif ( ntest == 12 ) then
   val = x(1)**2 + x(2)**2 + x(1)*x(2) - 14d0*x(1) - 16d0*x(2)+ &
         (x(3)-10)**2 + 4d0*(x(4)-5d0)**2+(x(5)-3d0)**2+ &
         2.0d0*(x(6)-1d0)**2+ &

@@ -62,17 +62,17 @@ save / dfocm /
 !  CHECK IN WHICH BLOCK WE ARE DOING THE UPDATES
 !
 
- if ( ipoly .le. np1 ) then
+ if ( ipoly <= np1 ) then
    block=1
-   if ( nind .gt. np1 ) then
-     if ( iprint .gt. 0 ) write( iout, 1000 )
+   if ( nind > np1 ) then
+     if ( iprint > 0 ) write( iout, 1000 )
      stop
    endif
  else
    block=2
  endif
 
- if (block.eq.1) then
+ if (block==1) then
 
 !
 !  IF A POLYNOMIAL IN THE LINEAR BLOCK IS UPDATED
@@ -83,7 +83,7 @@ save / dfocm /
    poly(npbeg)=poly(npbeg)-val*poly(1)
 
    do 20 j=2,nind
-     if ( j .ne. ipoly ) then
+     if ( j /= ipoly ) then
        call evalnp(val, pntint, j, poly, ipoly, n, lptint, lpoly) 
        do 10 i=npbeg,npend
          poly(i)=poly(i)-val*poly(i-npbeg+2+(j-2)*np1)
@@ -117,7 +117,7 @@ save / dfocm /
 !  "ORTHOGONALIZE" THE IPOLY-TH POLYNOMIAL WITH THE QUADRATIC BLOCK
 !
    do 60 j = n+2, nind
-     if ( j .ne. ipoly ) then
+     if ( j /= ipoly ) then
        call evalnp(val, pntint, j, poly, ipoly, n, &
                    lptint, lpoly)
        npend = npbeg + dd - 1

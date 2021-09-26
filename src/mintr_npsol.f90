@@ -107,13 +107,13 @@ include 'dfo_model_inc.inc'
 !  SINCE WE ARE USING NPSOL
 !
 useipopt=0
-if (method .eq. 2) then 
+if (method == 2) then 
    usemerit=.true.
 else
    usemerit=.false.
 endif
 ncont=ncon
-if (ncnln .le. nnln .and. .not.usemerit) ncon=0
+if (ncnln <= nnln .and. .not.usemerit) ncon=0
 !
 !  SUBROUTINES AND FUNCTIONS CALLED:
 !
@@ -145,8 +145,8 @@ lenw   = lwrk-icurw+1
 
 lnneed = 2*n*n+n*nclin+2*n*ncnln+20*n+11*nclin+21*ncnln
 
-if (lenw.lt.lnneed) then
-  if (iprint .ge. 0) write(iout,9000) lnneed
+if (lenw<lnneed) then
+  if (iprint >= 0) write(iout,9000) lnneed
   stop
 endif
 
@@ -160,8 +160,8 @@ leniw=liwrk-icuriw+1
 !
 !  CHECK IF THE INTEGER SPACE IS SUFFICIENT
 !
-if (leniw.lt.3*n+nclin+2*ncnln) then
-  if (iprint .ge. 0) write (iout,9001) 3*n+nclin+2*ncnln
+if (leniw<3*n+nclin+2*ncnln) then
+  if (iprint >= 0) write (iout,9001) 3*n+nclin+2*ncnln
   stop
 endif
 
@@ -180,7 +180,7 @@ do 10 i=1,n
   wrk(lbu+i)=min(x0(i)+delta, uprbnd(i))
 10 continue
 
-if (nclin+ncnln .gt. 0) then
+if (nclin+ncnln > 0) then
   call dcopy(nclin+ncnln, lwrbnd(n+1), 1, wrk(ibl+n), 1)
   call dcopy(nclin+ncnln, uprbnd(n+1), 1, wrk(ibu+n), 1)
 endif
@@ -194,27 +194,27 @@ tol=cnstol
 !  TOLERANCE, USED BY NPSOL, TO A DEFAULT VALUE
 !
 call npoptn( 'NOLIST' )
-if ( ncnln .eq. 0 ) tol = 1.0d-8
+if ( ncnln == 0 ) tol = 1.0d-8
 
-if ( tol .ge. 1.0d0 ) then 
+if ( tol >= 1.0d0 ) then 
   call npoptn( 'FEASIBILITY TOLERANCE = 1.0D0' )
-else if ( tol .ge. 1.0d-1 ) then 
+else if ( tol >= 1.0d-1 ) then 
   call npoptn( 'FEASIBILITY TOLERANCE = 1.0D-1' )
-else if ( tol .ge. 1.0d-2 ) then 
+else if ( tol >= 1.0d-2 ) then 
   call npoptn( 'FEASIBILITY TOLERANCE = 1.0D-2' )
-else if ( tol .ge. 1.0d-3 ) then 
+else if ( tol >= 1.0d-3 ) then 
   call npoptn( 'FEASIBILITY TOLERANCE = 1.0D-3' )
-else if ( tol .ge. 1.0d-4 ) then 
+else if ( tol >= 1.0d-4 ) then 
   call npoptn( 'FEASIBILITY TOLERANCE = 1.0D-4' )
-else if ( tol .ge. 1.0d-5 ) then 
+else if ( tol >= 1.0d-5 ) then 
   call npoptn( 'FEASIBILITY TOLERANCE = 1.0D-5' )
-else if ( tol .ge. 1.0d-6 ) then 
+else if ( tol >= 1.0d-6 ) then 
   call npoptn( 'FEASIBILITY TOLERANCE = 1.0D-6' )
-else if ( tol .ge. 1.0d-7 ) then 
+else if ( tol >= 1.0d-7 ) then 
   call npoptn( 'FEASIBILITY TOLERANCE = 1.0D-7' )
-else if ( tol .ge. 1.0d-8 ) then 
+else if ( tol >= 1.0d-8 ) then 
   call npoptn( 'FEASIBILITY TOLERANCE = 1.0D-8' )
-else if ( tol .ge. 1.0d-9 ) then 
+else if ( tol >= 1.0d-9 ) then 
   call npoptn( 'FEASIBILITY TOLERANCE = 1.0D-9' )
 else     
   call npoptn( 'FEASIBILITY TOLERANCE = 1.0D-10' )
@@ -229,58 +229,58 @@ call npoptn( 'PRINT LEVEL = 0' )
                lenw       )        
 
 
- if (inf.eq.0) then
-   if( iprint.ge.3 )    write(iout,8000) 
+ if (inf==0) then
+   if( iprint>=3 )    write(iout,8000) 
    inform=0
- else if (inf.eq.1) then
-   if( iprint.ge.3 )    write(iout,8001) 
+ else if (inf==1) then
+   if( iprint>=3 )    write(iout,8001) 
    inform=0
- else if (inf.eq.2) then
-   if( iprint.ge.3 )    write(iout,8002) 
+ else if (inf==2) then
+   if( iprint>=3 )    write(iout,8002) 
    inform=2
- else if (inf.eq.3) then
-   if( iprint.ge.3 )    write(iout,8003) 
+ else if (inf==3) then
+   if( iprint>=3 )    write(iout,8003) 
    inform=3
- else if (inf.eq.4) then
-   if( iprint.ge.3 )    write(iout,8004) 
+ else if (inf==4) then
+   if( iprint>=3 )    write(iout,8004) 
    inform=0
- else if (inf.eq.6) then
-   if( iprint.ge.3 )    write(iout,8006) 
+ else if (inf==6) then
+   if( iprint>=3 )    write(iout,8006) 
    inform=2
- else if (inf.eq.7) then
-   if( iprint.ge.3 )   write(iout,8007) 
+ else if (inf==7) then
+   if( iprint>=3 )   write(iout,8007) 
    inform=1
- else if (inf.eq.9) then
-   if( iprint.ge.3 )   write(iout,8009) 
+ else if (inf==9) then
+   if( iprint>=3 )   write(iout,8009) 
    inform=1
  endif
 
- if ( inf .eq. 6 .or. inf .eq. 4  .or. inf .eq. 1 ) then
+ if ( inf == 6 .or. inf == 4  .or. inf == 1 ) then
    inform = 0
    do 40 i=1, n
-     if ( x0(i) .lt. wrk(lbl+i) - cnstol .or. &
-          x0(i) .gt. wrk(lbu+i) + cnstol     ) &
+     if ( x0(i) < wrk(lbl+i) - cnstol .or. &
+          x0(i) > wrk(lbu+i) + cnstol     ) &
          inform = 2
 40    continue
-   if ( nclin .gt. 0 .and. inform .eq. 0 ) then
+   if ( nclin > 0 .and. inform == 0 ) then
      do 70 i=1, nclin 
        val = ddot(n, a(i), lda, x0, 1 )
-       if ( val .lt. lwrbnd(n+i) - cnstol .or. &
-            val .gt. uprbnd(n+i) + cnstol     ) &
+       if ( val < lwrbnd(n+i) - cnstol .or. &
+            val > uprbnd(n+i) + cnstol     ) &
             inform = 2
 70      continue
    endif
-   if ( ncnln .gt. 0 .and. inform .eq. 0 ) then
+   if ( ncnln > 0 .and. inform == 0 ) then
      call funcon(1 , ncnln  , n         , ldcjac, iwrk(icuriw), &
                  x0, wrk(ic), wrk(icjac), 1     )
      do 60 i=1, ncnln 
-       if ( wrk(ic+i-1) .lt. lwrbnd(n+nclin+i) - cnstol .or. &
-            wrk(ic+i-1) .gt. uprbnd(n+nclin+i) + cnstol     ) &
+       if ( wrk(ic+i-1) < lwrbnd(n+nclin+i) - cnstol .or. &
+            wrk(ic+i-1) > uprbnd(n+nclin+i) + cnstol     ) &
             inform = 3
 60      continue
    endif
  endif
- if ( ncon .gt. 0 .and. .not. usemerit ) then
+ if ( ncon > 0 .and. .not. usemerit ) then
    call funcon(1 , ncnln  , n         , ldcjac, iwrk(icuriw), &
                x0, wrk(ic), wrk(icjac), 1     )
    call dcopy(ncon, wrk(ic+nnln), 1, wrk, 1)

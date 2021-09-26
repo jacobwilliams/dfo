@@ -15,8 +15,8 @@ parameter        (half=0.5d0)
 !
 include 'dfo_model_inc.inc'
 
-if ( useipopt .gt. 0 ) then 
-  if (mode .eq. 1 ) then      
+if ( useipopt > 0 ) then 
+  if (mode == 1 ) then      
     objf=0
     do 10 i=1,n
       objf=objf+gmod(i)*x(i)
@@ -33,9 +33,9 @@ if ( useipopt .gt. 0 ) then
           val=val+half*qcon((k-1)*n*n+(i-1)*n+j)*x(i)*x(j)
 190         continue
 180       continue
-      if ( val .lt. conl(k) ) then 
+      if ( val < conl(k) ) then 
         objf = objf + penpar * ( conl(k) - val )
-      elseif ( val .gt. conu(k) ) then 
+      elseif ( val > conu(k) ) then 
         objf = objf + penpar * ( val - conu(k) )
       endif
 170       continue  
@@ -56,7 +56,7 @@ if ( useipopt .gt. 0 ) then
             val=val+half*qcon((k-1)*n*n+(i-1)*n+j)*x(i)*x(j)
 290           continue
 280         continue
-        if ( val .lt. conl(k) ) then 
+        if ( val < conl(k) ) then 
           do 200 i=1,n
             objgrd(i)=objgrd(i)-penpar*lcon((k-1)*n+i)
             do 210 j=1,n
@@ -64,7 +64,7 @@ if ( useipopt .gt. 0 ) then
               *x(j)
 210             continue
 200           continue
-        elseif ( val .gt. conu(k) ) then 
+        elseif ( val > conu(k) ) then 
           do 220 i=1,n
             objgrd(i)=objgrd(i)+penpar*lcon((k-1)*n+i)
             do 230 j=1,n
@@ -95,7 +95,7 @@ else
           val=val+half*qcon((k-1)*n*n+(i-1)*n+j)*x(i)*x(j)
 90         continue
 80       continue
-      if ( val .lt. conl(k) ) then 
+      if ( val < conl(k) ) then 
         objf = objf + penpar * ( conl(k) - val )
         do 100 i=1,n
           objgrd(i)=objgrd(i)-penpar*lcon((k-1)*n+i)
@@ -104,7 +104,7 @@ else
             *x(j)
 110           continue
 100         continue
-      elseif ( val .gt. conu(k) ) then 
+      elseif ( val > conu(k) ) then 
         objf = objf + penpar * ( val - conu(k) )
         do 120 i=1,n
           objgrd(i)=objgrd(i)+penpar*lcon((k-1)*n+i)
